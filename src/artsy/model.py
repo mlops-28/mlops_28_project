@@ -10,7 +10,7 @@ class ArtsyClassifier(LightningModule):
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=5, stride=2) 
         self.conv2 = nn.Conv2d(16, 32, 3, 1)
         self.conv3 = nn.Conv2d(32, 64, 3, 1) # Out: 
-        self.fc = nn.Linear(64*14*14, 3)
+        self.fc = nn.Linear(64*14*14, 5)
 
         self.relu = nn.ReLU()
         self.dropout = nn.Dropout(p=drop_p)
