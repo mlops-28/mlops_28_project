@@ -1,9 +1,10 @@
-from torch import nn
+from pytorch_lightning import LightningModule
+from torch import nn, optim
 import torch
 
-class ArtsyClassifier(nn.Module):
-    """Just a dummy model to show how to structure your code"""
-    def __init__(self):
+class ArtsyClassifier(LightningModule):
+    """CNN with 3 convolutional layers to classify the artstyle of 256x256 images."""
+    def __init__(self, lr: float=1e-3, drop_p: float=0.2):
         super().__init__()
         # Out: floor((in + 2*padding - kernel_size) / stride) + 1
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=5, stride=2) 
@@ -12,7 +13,9 @@ class ArtsyClassifier(nn.Module):
         self.fc = nn.Linear(64*14*14, 3)
 
         self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(p=0.2)
+        self.dropout = nn.Dropout(p=drop_p)
+        self.criterium = nn.CrossEntropyLoss()
+        self.lr = lr
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.relu(self.conv1(x)) # Out: floor((256 + 0 - 5) / 2) + 1 = 126
@@ -24,6 +27,15 @@ class ArtsyClassifier(nn.Module):
         x = self.dropout(torch.flatten(x, 1)) # Out: 64 * 14 * 14 = 12544
 
         return self.fc(x)
+    
+    def training_step(self, batch, batch_idx):
+        data, target = batch
+        preds = self(data)
+        loss = self.criterium(preds, target)
+        return loss
+    
+    def configure_optimizers(self):
+        return optim.Adam(self.parameters(), lr=self.lr)
 
 if __name__ == "__main__":
     model = ArtsyClassifier()
