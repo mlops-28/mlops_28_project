@@ -1,16 +1,8 @@
-
-import pdb
+import pickle
+import os
+import glob
 import torch
 from datasets import load_dataset
-from sklearn.model_selection import train_test_split
-from tqdm import tqdm
-from collections import Counter
-from PIL import Image
-import os
-import pickle
-from torch.utils.data import DataLoader
-
-import glob
 import lightning as L
 from torch.utils.data import random_split, DataLoader
 from torch.utils.data import TensorDataset
@@ -38,6 +30,9 @@ class WikiArtModule(L.LightningDataModule):
     
     def prepare_data(self):
 
+        if os.path.exists(self.processed_data_path+"/styles.pkl"):
+            return
+
         def transform_images(data):
             data["image"] = self.transform(data["image"])
             return data
@@ -64,45 +59,41 @@ class WikiArtModule(L.LightningDataModule):
                 torch.save(torch.stack(imgs), f"data/processed/images_batch_{batch_id:04d}.pt")
                 torch.save(torch.tensor(labels), f"data/processed/labels_batch_{batch_id:04d}.pt")
 
-        if self.processed_data_path is None:
-            self.ds = load_dataset("huggan/wikiart", split="train")
+        print("Loading dataset")
+        self.ds = load_dataset("huggan/wikiart", split="train")
 
-            self.ds = self.ds.with_transform(transform_images)
+        self.unique_styles = sorted(set(self.ds.unique("style")))
+        self.style_to_id = {s: i for i, s in enumerate(self.unique_styles)}
 
-            self.unique_styles = sorted(set(self.ds.unique("style")))
-            self.style_to_id = {s: i for i, s in enumerate(self.unique_styles)}
+        self.ds = self.ds.map(lambda x: {"label": self.style_to_id[x["style"]]}, num_proc=1)
 
-            self.ds = self.ds.map(lambda x: {"label": self.style_to_id[x["style"]]}, num_proc=1)
+        print("Save style-label dictionary")
+        with open('data/processed/styles.pkl', "wb") as file:
+            pickle.dump(self.style_to_id, file)
 
-            with open('data/processed/styles.pkl', "wb") as file:
-                pickle.dump(self.style_to_id, file)
-        
-            # Save data in batches
-            save_data_in_batches(self.ds, nsamples=self.nsamples)
-            self.dataset = None
-        
-        else:
-            img_files = sorted(glob.glob(f"{self.processed_data_path}/images_batch_*.pt"))
-            label_files = sorted(glob.glob(f"{self.processed_data_path}/labels_batch_*.pt"))
-
-            images = torch.cat([torch.load(f) for f in img_files], dim=0)
-            labels = torch.cat([torch.load(f) for f in label_files], dim=0)
-
-            self.dataset = TensorDataset(images, labels)
-
-            with open(self.processed_data_path+"/styles.pkl", "rb") as file:
-                self.style_to_id = pickle.load(file)
+        print("Transforming images")
+        self.ds = self.ds.with_transform(transform_images)
+    
+        # Save data in batches
+        print("Saving data in batches")
+        save_data_in_batches(self.ds, nsamples=self.nsamples)
 
 
     def setup(self, stage = None):
+        img_files = sorted(glob.glob(f"{self.processed_data_path}/images_batch_*.pt"))
+        label_files = sorted(glob.glob(f"{self.processed_data_path}/labels_batch_*.pt"))
 
-        if self.dataset is None:
-            print("You have to run prepare_data first")
+        images = torch.cat([torch.load(f) for f in img_files], dim=0)
+        labels = torch.cat([torch.load(f) for f in label_files], dim=0)
 
-        else:
-            self.trainset, self.valset, self.testset = random_split(
-                    self.dataset, [0.8, 0.1, 0.1], generator=torch.Generator().manual_seed(self.seed)
-                    )
+        self.dataset = TensorDataset(images, labels)
+
+        with open(self.processed_data_path+"/styles.pkl", "rb") as file:
+            self.style_to_id = pickle.load(file)
+
+        self.trainset, self.valset, self.testset = random_split(
+                self.dataset, [0.8, 0.1, 0.1], generator=torch.Generator().manual_seed(self.seed)
+                )
     
     def train_dataloader(self):
         return DataLoader(self.trainset, batch_size=self.batch_size)
@@ -234,8 +225,7 @@ class WikiArtModule(L.LightningDataModule):
 #         print(f"{style}: {count}")
 
 if __name__ == "__main__":
-    data = WikiArtModule()
-    data.prepare_data()
+    data = WikiArtModule(processed_data_path = "data/processed")
 
 
 
