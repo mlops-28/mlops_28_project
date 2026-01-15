@@ -1,32 +1,29 @@
 ## Priority
 * [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6) (Maybe using Ignite?)
+* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6) (Using Pytorch lightning)
 * (evaluate.py, visualize.py)
+* * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
 * [ ] Write one or multiple configurations files for your experiments (M11)
 * [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [ ] Write unit tests related to the data part of your code (M16)
+* [ ] Write unit tests related to model construction and or model training (M16)
 
 ## Overall project remaining checklist points
 
 ### Week 1
-
-* [ ] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
-    `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
+* [ ] Setup version control for your data or part of your data (DVC on Cloud) (M8)
+* [ ] Add command line interfaces and project commands to your code where it makes sense (Typer) (M9)
 * [ ] Construct one or multiple docker files for your code (M10)
 * [ ] Build the docker files locally and make sure they work as intended (M10)
 * [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
+* [ ] Use logging to log important events in your code (Hydra + logging or WandB) (M14)
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
-* [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
+* [ ] Consider running a hyperparameter optimization sweep (Wandb) (M14)
 
 ### Week 2
-
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
 * [ ] Calculate the code coverage (M16)
 * [ ] Get some continuous integration running on the GitHub repository (M17)
 * [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
@@ -45,7 +42,6 @@
 * [ ] Create a frontend for your API (M26)
 
 ### Week 3
-
 * [ ] Check how robust your model is towards data drifting (M27)
 * [ ] Setup collection of input-output data from your deployed application (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
@@ -57,7 +53,6 @@
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
 ### Extra
-
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
