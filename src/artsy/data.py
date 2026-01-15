@@ -4,15 +4,16 @@ import glob
 import torch
 from datasets import load_dataset
 import lightning as L
-from torch.utils.data import random_split, DataLoader
-from torch.utils.data import TensorDataset
+from torch.utils.data import random_split, DataLoader, TensorDataset
 from torchvision.transforms import v2
 from tqdm import tqdm
 from collections import defaultdict
 
 class WikiArtModule(L.LightningDataModule):
-    def __init__(self, seed: int = 42, batch_size: int = 32, image_size: int = 256, num_workers: int = 4, 
-                 processed_data_path: str = None, nsamples: int = 1000, labels_to_keep: list = [12,21,23,9,20]):
+    "Loads Wikiart dataset from Huggingface, so it is ready to be used for training and testing with the Pytorch Lightning module"
+    def __init__(self, seed: int = 42, batch_size: int = 32, image_size: int = 128, num_workers: int = 4, 
+                 processed_data_path: str = None, nsamples: int = 1000, labels_to_keep: list = [12,21,23,9,20],
+                 train_val_test: list = [0.8, 0.1, 0.1]):
         super().__init__()
         self.seed = seed
         self.batch_size = batch_size
@@ -21,6 +22,7 @@ class WikiArtModule(L.LightningDataModule):
         self.processed_data_path = processed_data_path
         self.nsamples = nsamples
         self.labels_to_keep = labels_to_keep
+        self.data_split = train_val_test
 
         self.transform = v2.Compose([
             v2.Resize(self.image_size),      # resize shortest side to 256
@@ -31,8 +33,9 @@ class WikiArtModule(L.LightningDataModule):
         ])
     
     def prepare_data(self):
-
-        if os.path.exists(self.processed_data_path+"/styles.pkl"):
+        """ Function to preproccess data. Data is loaded in and filtered by labels. Afterwards, a subset of each class is selected
+        and then processed using the transform defined during initialization. The preprocessed data is then saved batch-wise. """
+        if glob.glob(os.path.join(self.processed_data_path, "*.pt")):
             return
 
         def transform_images(data):
@@ -52,10 +55,6 @@ class WikiArtModule(L.LightningDataModule):
                     torch.save(torch.stack(imgs), f"data/processed/images_batch_{batch_id:04d}.pt")
                     torch.save(torch.tensor(labels), f"data/processed/labels_batch_{batch_id:04d}.pt")
 
-                    if batch_id == 0:
-                        file_size_bytes = os.path.getsize(f"data/processed/images_batch_{batch_id:04d}.pt")
-                        print(file_size_bytes)
-                        breakpoint()
                     imgs.clear()
                     labels.clear()
                     batch_id += 1
@@ -92,6 +91,7 @@ class WikiArtModule(L.LightningDataModule):
 
 
     def setup(self, stage = None):
+        """ Data is loaded from the given directory and split into train, val and test """
         img_files = sorted(glob.glob(f"{self.processed_data_path}/images_batch_*.pt"))
         label_files = sorted(glob.glob(f"{self.processed_data_path}/labels_batch_*.pt"))
 
@@ -100,20 +100,20 @@ class WikiArtModule(L.LightningDataModule):
 
         self.dataset = TensorDataset(images, labels)
 
-        with open(self.processed_data_path+"/styles.pkl", "rb") as file:
-            self.style_to_id = pickle.load(file)
-
         self.trainset, self.valset, self.testset = random_split(
-                self.dataset, [0.8, 0.1, 0.1], generator=torch.Generator().manual_seed(self.seed)
+                self.dataset, self.data_split, generator=torch.Generator().manual_seed(self.seed)
                 )
     
     def train_dataloader(self):
+        "Initialize Dataloader with training data"
         return DataLoader(self.trainset, batch_size=self.batch_size)
 
     def val_dataloader(self):
+        "Initialize Dataloader with validation data"
         return DataLoader(self.valset, batch_size=self.batch_size)
 
     def test_dataloader(self):
+        "Initialize Dataloader with test data"
         return DataLoader(self.testset, batch_size=self.batch_size)
         
 
