@@ -29,6 +29,7 @@ dependencies = [
     "torchvision>=0.21.0",
     "typer==0.15.1",
     "uvicorn==0.34.0",
+    "pathspec<0.12"
 ]
 
 [dependency-groups]
