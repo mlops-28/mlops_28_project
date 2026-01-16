@@ -1,14 +1,12 @@
 ## Priority
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
 * [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6) (Using Pytorch lightning)
 * (evaluate.py, visualize.py)
-* * [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
 * [ ] Write one or multiple configurations files for your experiments (M11)
 * [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Write unit tests related to the data part of your code (M16)
 * [ ] Write unit tests related to model construction and or model training (M16)
+* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 
 ## Overall project remaining checklist points
 
@@ -31,7 +29,6 @@
 * [ ] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Create a FastAPI application that can do inference using your model (M22)
