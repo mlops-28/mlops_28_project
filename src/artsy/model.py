@@ -48,6 +48,16 @@ class ArtsyClassifier(LightningModule):
 
         return loss
     
+    def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
+        self.half()
+        data, target = batch
+        preds = self(data)
+        loss = self.criterium(preds, target)
+
+        self.log("test_loss", loss)
+
+        return loss
+    
     def configure_optimizers(self):
         return optim.Adam(self.parameters(), lr=self.lr)
 
