@@ -32,6 +32,9 @@ class ArtsyClassifier(LightningModule):
         self.half()
         data, target = batch
         preds = self(data)
+        if batch_idx == 0:
+            print("preds.shape:", preds.shape)     # should be [B, C]
+            print("target.min/max:", target.min().item(), target.max().item())
         loss = self.criterium(preds, target)
 
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
