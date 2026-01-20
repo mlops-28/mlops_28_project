@@ -17,6 +17,8 @@ class ArtsyClassifier(LightningModule):
         self.criterium = nn.CrossEntropyLoss()
         self.lr = lr
 
+        self.label_map = {9: 0, 12: 1, 20: 2, 21: 3, 23: 4}
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.relu(self.conv1(x)) # Out: floor((128 + 0 - 5) / 2) + 1 = 62
         x = torch.max_pool2d(x, 2, 2) # Out: floor(62 / 2) = 31
@@ -28,13 +30,21 @@ class ArtsyClassifier(LightningModule):
 
         return self.fc(x)
     
+    def _remap_targets(self, target: torch.Tensor) -> torch.Tensor:
+        """Remaps the target to fit with CrossEntropyLoss"""
+        mapped = torch.tensor([self.label_map[int(t)] for t in target], device=target.device)
+        return mapped.long()
+
+    
     def training_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        self.half()
+        # self.half()
         data, target = batch
+        target = self._remap_targets(target)
         preds = self(data)
         if batch_idx == 0:
-            print("preds.shape:", preds.shape)     # should be [B, C]
-            print("target.min/max:", target.min().item(), target.max().item())
+            print("data dtype/min/max:", data.dtype, data.min().item(), data.max().item())
+            print("preds dtype:", preds.dtype)
+            print("preds has nan:", torch.isnan(preds).any().item(), "inf:", torch.isinf(preds).any().item())
         loss = self.criterium(preds, target)
 
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
@@ -42,8 +52,9 @@ class ArtsyClassifier(LightningModule):
         return loss
     
     def validation_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        self.half()
+        # self.half()
         data, target = batch
+        target = self._remap_targets(target)
         preds = self(data)
         loss = self.criterium(preds, target)
 
@@ -52,8 +63,9 @@ class ArtsyClassifier(LightningModule):
         return loss
     
     def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        self.half()
+        # self.half()
         data, target = batch
+        target = self._remap_targets(target)
         preds = self(data)
         loss = self.criterium(preds, target)
 

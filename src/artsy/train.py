@@ -21,12 +21,27 @@ def train(cfg) -> None:
     train_loader, val_loader = dataset.train_dataloader(), dataset.val_dataloader()
     model = ArtsyClassifier()
 
-    checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
+    checkpoint_callback = ModelCheckpoint(
+    dirpath="./models",
+    monitor="val_loss",
+    mode="min",
+    save_top_k=1,
+    filename="epoch{epoch}-val_loss{val_loss:.4f}",
+)
+
+    # checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
     # early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
 
-    trainer = Trainer(accelerator=ACCELERATOR, callbacks=[checkpoint_callback]) # Check precision of input and model matches
+    # trainer = Trainer(accelerator=ACCELERATOR, callbacks=[checkpoint_callback]) # Check precision of input and model matches
+
+    trainer = Trainer(
+        accelerator=ACCELERATOR,
+        callbacks=[checkpoint_callback],
+        max_epochs=cfg.trainer.max_epochs if "trainer" in cfg and "max_epochs" in cfg.trainer else 999,
+    )
 
     print("Starting training...")
+    # trainer.fit(model, train_loader, val_loader)
     trainer.fit(model, train_loader, val_loader)
     print("Done!")
 
