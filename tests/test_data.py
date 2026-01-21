@@ -1,10 +1,11 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 from hydra import compose, initialize
 from omegaconf import DictConfig
 from artsy.data import WikiArtModule
 import pytest
 import os
 import torch
+
 
 @pytest.mark.skipif(not os.path.exists("data/processed/"), reason="Data files not found")
 def test_my_dataset():
@@ -23,12 +24,12 @@ def test_my_dataset():
     train_val_test = cfg.data.hyperparameters.train_val_test
 
     # Assert we have right total amount of data
-    assert len(data.trainset) + len(data.valset) + len(data.testset) == int(nclasses*nsamples)
+    assert len(data.trainset) + len(data.valset) + len(data.testset) == int(nclasses * nsamples)
 
     # Assert that splits have been done properly
-    assert len(data.testset) == int(nclasses*nsamples*train_val_test[2])
-    assert len(data.valset) == int(nclasses*nsamples*train_val_test[1])
-    assert len(data.trainset) == int(nclasses*nsamples*train_val_test[0])
+    assert len(data.testset) == int(nclasses * nsamples * train_val_test[2])
+    assert len(data.valset) == int(nclasses * nsamples * train_val_test[1])
+    assert len(data.trainset) == int(nclasses * nsamples * train_val_test[0])
 
     # Assert that images have the right shape
     image, _ = data.trainset[0]

@@ -12,6 +12,7 @@ ACCELERATOR = "mps" if torch.backends.mps.is_available() else "auto"
 
 log = logging.getLogger(__name__)
 
+
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml")
 # def evaluate(model_checkpoint: str = "models/model.pth"):
 def evaluate(cfg) -> None:
@@ -23,14 +24,17 @@ def evaluate(cfg) -> None:
     test_dataloader = dataset.test_dataloader()
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
-    model = ArtsyClassifier.load_from_checkpoint(checkpoint_path=model_checkpoint, strict=True, map_location=torch.device("cpu"))
+    model = ArtsyClassifier.load_from_checkpoint(
+        checkpoint_path=model_checkpoint, strict=True, map_location=torch.device("cpu")
+    )
 
-    trainer = Trainer(accelerator=ACCELERATOR,
-                      devices=1,
-                      logger=False,
-                      enable_checkpointing = False,
-                    #   precision="16-mixed",
-                      )
+    trainer = Trainer(
+        accelerator=ACCELERATOR,
+        devices=1,
+        logger=False,
+        enable_checkpointing=False,
+        #   precision="16-mixed",
+    )
 
     results = trainer.test(model=model, dataloaders=test_dataloader, verbose=False)
     test_loss = results[0]["test_loss"]
@@ -39,8 +43,6 @@ def evaluate(cfg) -> None:
 
     # # model.load_state_dict(torch.load(model_checkpoint, weights_only=True))
     # model.load_state_dict(torch.load(model_checkpoint)["state_dict"])
-
-
 
     # model.eval()
     # model.half()
@@ -57,6 +59,7 @@ def evaluate(cfg) -> None:
     #     accuracy = correct / total
 
     #     print(f"The test accuracy is {accuracy}")
+
 
 if __name__ == "__main__":
     # typer.run(evaluate)
