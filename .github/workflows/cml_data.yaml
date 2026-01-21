@@ -10,9 +10,6 @@ on:
   push:
     brances:
     - data_stats
-    paths:
-    - '**/*.dvc'
-    - '.dvc/**'
 
 jobs:
   dataset_statistics:
