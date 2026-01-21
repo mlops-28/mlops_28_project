@@ -1,6 +1,7 @@
 from pytorch_lightning import LightningModule
 from torch import nn, optim
 import torch
+import torchmetrics
 
 
 class ArtsyClassifier(LightningModule):
@@ -11,13 +12,15 @@ class ArtsyClassifier(LightningModule):
         # Out: floor((in + 2*padding - kernel_size) / stride) + 1
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=16, kernel_size=5, stride=2)
         self.conv2 = nn.Conv2d(16, 32, 3, 1)
-        self.conv3 = nn.Conv2d(32, 64, 3, 1)  # Out:
+        self.conv3 = nn.Conv2d(32, 64, 3, 1)
         self.fc = nn.Linear(64 * 6 * 6, 5)
 
         self.relu = nn.ReLU()
         self.dropout = nn.Dropout(p=drop_p)
         self.criterium = nn.CrossEntropyLoss()
         self.lr = lr
+        self.train_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=5)
+        self.test_acc = torchmetrics.classification.Accuracy(task="multiclass", num_classes=5)
 
         self.label_map = {9: 0, 12: 1, 20: 2, 21: 3, 23: 4}
 
@@ -38,23 +41,19 @@ class ArtsyClassifier(LightningModule):
         return mapped.long()
 
     def training_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        # self.half()
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
-        if batch_idx == 0:
-            print("data dtype/min/max:", data.dtype, data.min().item(), data.max().item())
-            print("preds dtype:", preds.dtype)
-            print("preds has nan:", torch.isnan(preds).any().item(), "inf:", torch.isinf(preds).any().item())
         loss = self.criterium(preds.float(), target)
+        self.train_acc(preds, target)
 
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
+        self.log("train_acc", self.train_acc)
 
         return loss
 
     def validation_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        # self.half()
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
@@ -66,14 +65,15 @@ class ArtsyClassifier(LightningModule):
         return loss
 
     def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
-        # self.half()
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
         loss = self.criterium(preds.float(), target)
+        self.test_acc(preds, target)
 
         self.log("test_loss", loss)
+        self.log("test_acc", self.test_acc)
 
         return loss
 

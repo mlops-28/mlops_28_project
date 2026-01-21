@@ -30,7 +30,6 @@ def train(cfg) -> None:
         accelerator=ACCELERATOR,
         callbacks=[checkpoint_callback],
         max_epochs=cfg.trainer.max_epochs if "trainer" in cfg and "max_epochs" in cfg.trainer else 999,
-        # precision="16-mixed",
     )
 
     print("Starting training...")
