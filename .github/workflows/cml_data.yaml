@@ -30,7 +30,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        uv sync --dev --locked
+        uv sync --dev
 
     - name: Authenticate with GCP
       uses: google-github-actions/auth@v2
