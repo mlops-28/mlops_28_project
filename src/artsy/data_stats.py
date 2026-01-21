@@ -78,6 +78,7 @@ def data_statistics(nimages: int = 15) -> None:
     plt.savefig("reports/figures/test_label_distribution.png")
     plt.close()
 
+
 if __name__ == "__main__":
     typer.run(data_statistics)
 
