@@ -3,14 +3,31 @@ import glob
 import typer
 import matplotlib.pyplot as plt
 from data import WikiArtModule
-from utils import show_image_and_target
 from hydra import compose, initialize
 from omegaconf import DictConfig
+from types import SimpleNamespace
 
 def data_statistics(nimages: int = 15) -> None:
     """Loads WikiArtModule and computes class distribution and saves sample images"""
-    with initialize(config_path="configs", job_name="test"):
-        cfg: DictConfig = compose(config_name="config")
+
+    assert nimages <= 20
+
+    # with initialize(config_path="configs", job_name="data_stats"):
+    #     cfg: DictConfig = compose(config_name="config")
+
+    cfg = SimpleNamespace(
+        data = SimpleNamespace(
+        hyperparameters=SimpleNamespace(
+        seed = 42,
+        batch_size = 32,
+        image_size = 128,
+        processed_data_path = "data/processed",
+        nsamples = 1000,
+        labels_to_keep = [12,21,23,9,20],
+        train_val_test = [0.8, 0.1, 0.1],
+        )
+        )
+    )
 
     data = WikiArtModule(cfg)
     data.setup()
@@ -26,26 +43,35 @@ def data_statistics(nimages: int = 15) -> None:
     print(f"Test dataset")
     print(f"Number of images: {len(testset)}")
     print(f"Image shape: {testset[0][0].shape}")
+    print("\n")
+
     print(f"Val dataset")
     print(f"Number of images: {len(valset)}")
     print(f"Image shape: {valset[0][0].shape}")
     print()
 
-    show_image_and_target(trainset.images[:nimages].to(torch.float32), trainset.target[:nimages], show=False)
+    plt.figure()
+    nrows = nimages // 5 + 1
+    for i in range(nimages):
+        plt.subplot(nrows, 5, i+1)
+        plt.imshow(trainset[i][0].to(torch.float32).permute(1, 2, 0).numpy())
+        plt.title(f"Image {i+1} target = {int(trainset[i][1])}")
     plt.savefig("reports/figures/samples_0_to_15.png")
     plt.close()
 
-    train_label_distribution = torch.bincount(trainset.target)
-    test_label_distribution = torch.bincount(testset.target)
+    train_targets = torch.tensor([target for _, target in trainset])
+    test_targets = torch.tensor([target for _, target in testset])
 
-    plt.bar(torch.arange(10), train_label_distribution)
+    unique_labels, counts = torch.unique(train_targets, return_counts=True)
+    plt.bar(unique_labels, counts)
     plt.title("Train label distribution")
     plt.xlabel("Label")
     plt.ylabel("Count")
     plt.savefig("reports/figures/train_label_distribution.png")
     plt.close()
 
-    plt.bar(torch.arange(10), test_label_distribution)
+    unique_labels, counts = torch.unique(test_targets, return_counts=True)
+    plt.bar(unique_labels, counts)
     plt.title("Test label distribution")
     plt.xlabel("Label")
     plt.ylabel("Count")
