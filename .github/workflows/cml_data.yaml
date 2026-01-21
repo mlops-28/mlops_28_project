@@ -11,6 +11,10 @@ on:
     brances:
     - data_stats
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   dataset_statistics:
     runs-on: ${{ matrix.os }}
