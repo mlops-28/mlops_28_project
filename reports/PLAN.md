@@ -30,11 +30,9 @@
 * [ ] Use profiling to optimize your code (M12)
 
 ### Week 2
-* [ ] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
