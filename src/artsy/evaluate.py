@@ -32,7 +32,8 @@ def evaluate(cfg) -> None:
                       devices=1, 
                       logger=False, 
                       enable_checkpointing = False, 
-                      precision="16-mixed",)
+                    #   precision="16-mixed",
+                      )
 
     results = trainer.test(model=model, dataloaders=test_dataloader, verbose=False)
     breakpoint()

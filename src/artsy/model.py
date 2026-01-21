@@ -39,13 +39,14 @@ class ArtsyClassifier(LightningModule):
     def training_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
         # self.half()
         data, target = batch
+        data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
         if batch_idx == 0:
             print("data dtype/min/max:", data.dtype, data.min().item(), data.max().item())
             print("preds dtype:", preds.dtype)
             print("preds has nan:", torch.isnan(preds).any().item(), "inf:", torch.isinf(preds).any().item())
-        loss = self.criterium(preds, target)
+        loss = self.criterium(preds.float(), target)
 
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
 
@@ -54,9 +55,10 @@ class ArtsyClassifier(LightningModule):
     def validation_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
         # self.half()
         data, target = batch
+        data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
-        loss = self.criterium(preds, target)
+        loss = self.criterium(preds.float(), target)
 
         self.log("val_loss", loss)
 
@@ -65,9 +67,10 @@ class ArtsyClassifier(LightningModule):
     def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
         # self.half()
         data, target = batch
+        data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
-        loss = self.criterium(preds, target)
+        loss = self.criterium(preds.float(), target)
 
         self.log("test_loss", loss)
 
