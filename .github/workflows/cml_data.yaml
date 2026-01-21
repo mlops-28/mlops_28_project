@@ -47,7 +47,7 @@ jobs:
     - name: Pull data
       run: |
         uv run dvc pull --no-run-cache
-    
+
     - name: Check data statistics & generate report
       run: |
         uv run src/artsy/data_stats.py > data_statistics.md

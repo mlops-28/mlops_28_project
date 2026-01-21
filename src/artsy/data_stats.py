@@ -1,11 +1,9 @@
 import torch
-import glob
 import typer
 import matplotlib.pyplot as plt
 from data import WikiArtModule
-from hydra import compose, initialize
-from omegaconf import DictConfig
 from types import SimpleNamespace
+
 
 def data_statistics(nimages: int = 15) -> None:
     """Loads WikiArtModule and computes class distribution and saves sample images"""
@@ -16,16 +14,16 @@ def data_statistics(nimages: int = 15) -> None:
     #     cfg: DictConfig = compose(config_name="config")
 
     cfg = SimpleNamespace(
-        data = SimpleNamespace(
-        hyperparameters=SimpleNamespace(
-        seed = 42,
-        batch_size = 32,
-        image_size = 128,
-        processed_data_path = "data/processed",
-        nsamples = 1000,
-        labels_to_keep = [12,21,23,9,20],
-        train_val_test = [0.8, 0.1, 0.1],
-        )
+        data=SimpleNamespace(
+            hyperparameters=SimpleNamespace(
+                seed=42,
+                batch_size=32,
+                image_size=128,
+                processed_data_path="data/processed",
+                nsamples=1000,
+                labels_to_keep=[12, 21, 23, 9, 20],
+                train_val_test=[0.8, 0.1, 0.1],
+            )
         )
     )
 
@@ -40,12 +38,12 @@ def data_statistics(nimages: int = 15) -> None:
     print(f"Number of images: {len(trainset)}")
     print(f"Image shape: {trainset[0][0].shape}")
     print("\n")
-    print(f"Test dataset")
+    print("Test dataset")
     print(f"Number of images: {len(testset)}")
     print(f"Image shape: {testset[0][0].shape}")
     print("\n")
 
-    print(f"Val dataset")
+    print("Val dataset")
     print(f"Number of images: {len(valset)}")
     print(f"Image shape: {valset[0][0].shape}")
     print()
@@ -53,7 +51,7 @@ def data_statistics(nimages: int = 15) -> None:
     plt.figure()
     nrows = nimages // 5 + 1
     for i in range(nimages):
-        plt.subplot(nrows, 5, i+1)
+        plt.subplot(nrows, 5, i + 1)
         plt.imshow(trainset[i][0].to(torch.float32).permute(1, 2, 0).numpy())
         plt.title(f"Image {i+1} target = {int(trainset[i][1])}")
     plt.savefig("reports/figures/samples_0_to_15.png")
@@ -81,6 +79,3 @@ def data_statistics(nimages: int = 15) -> None:
 
 if __name__ == "__main__":
     typer.run(data_statistics)
-
-
-
