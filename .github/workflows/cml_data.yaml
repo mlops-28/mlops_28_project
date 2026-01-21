@@ -9,7 +9,10 @@ on:
     - '.dvc/**'
   push:
     brances:
-    - data_stats
+    - main
+    paths:
+    - '**/*.dvc'
+    - '.dvc/**'
 
 permissions:
   contents: write
