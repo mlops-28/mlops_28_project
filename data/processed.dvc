@@ -465,9 +465,5 @@ outs:
         etag: 08de98b2c9e18f92031001
         version_id: '1768556285693022'
   - relpath: styles.txt
-    md5: 5e3bbd3569d0ea064a23fb4a0dfc68fd
-    size: 335
-    cloud:
-      remote_storage:
-        etag: 08d7b9f88ea39592031001
-        version_id: '1768745678544087'
+    md5: 0b5166811ac9301e709fd715bf95d144
+    size: 431
