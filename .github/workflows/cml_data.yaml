@@ -7,21 +7,14 @@ on:
     paths:
     - '**/*.dvc'
     - '.dvc/**'
-  push:
-    branches:
-    - main
-    paths:
-    - '**/*.dvc'
-    - '.dvc/**'
 
 jobs:
-  build:
+  dataset_statistics:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest",  "macos-latest"]
-        python-version: ["3.12"]
     steps:
     - name: Checkout
       uses: actions/checkout@v5
@@ -29,7 +22,7 @@ jobs:
     - name: Setup uv
       uses: astral-sh/setup-uv@v7
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.12
         cache: 'uv'
 
     - name: Install dependencies
@@ -44,9 +37,21 @@ jobs:
     - name: Pull data
       run: |
         dvc pull --no-run-cache
-
-    - name: Check data statistics
+    
+    - name: Check data statistics & generate report
       run: |
-        uv run src/artsy/dataset_stats.py
+        uv run src/artsy/data_stats.py > data_statistics.md
+        echo '![](./reports/figures/samples_0_to_15.png "Wikiart samples")' >> data_statistics.md
+        echo '![](./reports/figures/train_label_distribution.png "Train label distribution")' >> data_statistics.md
+        echo '![](./reports/figures/test_label_distribution.png "Test label distribution")' >> data_statistics.md
+
+    - name: Setup cml
+      uses: iterative/setup-cml@v2
+
+    - name: Comment on PR
+      env:
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cml comment create data_statistics.md --watermark-title="Data Checker" # (1)!
 
 
