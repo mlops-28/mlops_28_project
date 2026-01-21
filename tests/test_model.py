@@ -7,7 +7,7 @@ from src.artsy.model import ArtsyClassifier
 
 def test_model_output_shape() -> None:
     model = ArtsyClassifier()
-    dummy_input = torch.randn(1, 3, 256, 256)
+    dummy_input = torch.randn(1, 3, 128, 128)
     output = model(dummy_input)
     assert output.shape == (1, 5), f"Shape of output not equal to [1, 5], but {output.shape}"
 
@@ -23,6 +23,6 @@ def test_model_output_shape() -> None:
 @pytest.mark.parametrize("batch_size", [32, 64, 128])
 def test_model_batch_size(batch_size: int) -> None:
     model = ArtsyClassifier()
-    input = torch.randn(batch_size, 3, 256, 256)
+    input = torch.randn(batch_size, 3, 128, 128)
     output = model(input)
     assert output.shape == (batch_size, 5), f"Shape of output not equal to [{batch_size}, 5], but {output.shape}"
