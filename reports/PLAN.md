@@ -1,19 +1,21 @@
 ## Priority
 * [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6) (Using Pytorch lightning)
 * (evaluate.py, visualize.py)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
-* [ ] Write unit tests related to model construction and or model training (M16)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [ ] Use Hydra to load the configurations and manage your hyperparameters (missing model) (M11)
+* [ ] Test that whole group can access data in cloud (M21)
+* [ ] Get some continuous integration running on the GitHub repository (M17)
+* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [ ] Add a linting step to your continuous integration (M17)
 
+## General
+* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
+* [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
+* [ ]  Add command line interfaces and project commands to your code where it makes sense (Typer) (M9)
+* [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
+      
 ## Overall project remaining checklist points
 
 ### Week 1
-* [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Setup version control for your data or part of your data (DVC on Cloud) (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (Typer) (M9)
 * [ ] Construct one or multiple docker files for your code (M10)
 * [ ] Build the docker files locally and make sure they work as intended (M10)
 * [ ] Use profiling to optimize your code (M12)
@@ -23,11 +25,7 @@
 
 ### Week 2
 * [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
 * [ ] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
