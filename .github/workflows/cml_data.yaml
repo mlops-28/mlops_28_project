@@ -50,7 +50,7 @@ jobs:
 
     - name: Check data statistics & generate report
       run: |
-        uv run src/artsy/data_stats.py > data_statistics.md
+        uv run -m src.artsy.data_stats > data_statistics.md
         echo '![](./reports/figures/samples_0_to_15.png "Wikiart samples")' >> data_statistics.md
         echo '![](./reports/figures/train_label_distribution.png "Train label distribution")' >> data_statistics.md
         echo '![](./reports/figures/test_label_distribution.png "Test label distribution")' >> data_statistics.md
