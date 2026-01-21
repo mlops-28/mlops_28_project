@@ -8,12 +8,9 @@
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (Wandb) (M14)
 
-- N
-* [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
-
+-N
+* [ ] Dependabot
+      
 - B
 * [ ] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Write API tests for your application and setup continues integration for these (M24)
