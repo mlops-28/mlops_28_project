@@ -467,3 +467,7 @@ outs:
   - relpath: styles.txt
     md5: 5e3bbd3569d0ea064a23fb4a0dfc68fd
     size: 335
+    cloud:
+      remote_storage:
+        etag: 08d7b9f88ea39592031001
+        version_id: '1768745678544087'
