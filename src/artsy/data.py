@@ -1,7 +1,7 @@
 import os
 import glob
 import torch
-import lightning as L
+import pytorch_lightning as L
 
 from datasets import load_dataset, Dataset
 from torch.utils.data import random_split, DataLoader, TensorDataset
