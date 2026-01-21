@@ -1,0 +1,17 @@
+figure_name: "training_loss.png"
+labels:
+  map:
+    9: 0
+    12: 1
+    20: 2
+    21: 3
+    23: 4
+  names:
+    9: "Expresionism"
+    12: "Impressionism"
+    20: "Post Impressionism"
+    21: "Realism"
+    23: "Romanticism"
+figures:
+  confusion_matrix: "confusion_matrix.png"
+  example_predictions: "predicted_vs_true_labels.png"

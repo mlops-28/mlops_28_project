@@ -3,3 +3,4 @@ defaults:
   - data: data_conf
   - eval: eval_conf
   - trainer: trainer_conf
+  - visualize: visualize_conf
