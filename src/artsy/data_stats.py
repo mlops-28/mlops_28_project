@@ -1,7 +1,7 @@
 import torch
 import typer
 import matplotlib.pyplot as plt
-from artsy.data import WikiArtModule
+from src.artsy.data import WikiArtModule
 from types import SimpleNamespace
 
 
