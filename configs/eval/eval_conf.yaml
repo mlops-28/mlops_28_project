@@ -1,0 +1,2 @@
+# model_checkpoint: "models/best_model.pth"
+model_checkpoint: "./outputs/2026-01-21/12-36-04/models/epoch=6-step=5649.ckpt"
