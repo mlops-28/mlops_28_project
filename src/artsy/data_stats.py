@@ -2,7 +2,10 @@ import torch
 import typer
 import matplotlib.pyplot as plt
 from src.artsy.data import WikiArtModule
-from types import SimpleNamespace
+from hydra import compose, initialize_config_dir
+from omegaconf import DictConfig
+
+from src.artsy import _PATH_CONFIGS
 
 
 def data_statistics(nimages: int = 15) -> None:
@@ -10,22 +13,8 @@ def data_statistics(nimages: int = 15) -> None:
 
     assert nimages <= 20
 
-    # with initialize(config_path="configs", job_name="data_stats"):
-    #     cfg: DictConfig = compose(config_name="config")
-
-    cfg = SimpleNamespace(
-        data=SimpleNamespace(
-            hyperparameters=SimpleNamespace(
-                seed=42,
-                batch_size=32,
-                image_size=128,
-                processed_data_path="data/processed",
-                nsamples=1000,
-                labels_to_keep=[12, 21, 23, 9, 20],
-                train_val_test=[0.8, 0.1, 0.1],
-            )
-        )
-    )
+    with initialize_config_dir(config_dir=_PATH_CONFIGS, job_name="test", version_base=None):
+        cfg: DictConfig = compose(config_name="default_config.yaml")
 
     data = WikiArtModule(cfg)
     data.setup()
