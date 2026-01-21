@@ -1,0 +1,21 @@
+data:
+  hyperparameters:
+    seed: 42
+    batch_size: 32
+    image_size: 128
+    processed_data_path: data/processed
+    nsamples: 1000
+    labels_to_keep:
+    - 12
+    - 21
+    - 23
+    - 9
+    - 20
+    train_val_test:
+    - 0.8
+    - 0.1
+    - 0.1
+eval:
+  model_checkpoint: ./outputs/2026-01-21/11-55-30/models/epoch=2-step=2421.ckpt
+trainer:
+  max_epochs: 20

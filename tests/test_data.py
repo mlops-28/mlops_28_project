@@ -12,7 +12,7 @@ def test_my_dataset():
 
     with initialize(config_path="configs", job_name="test"):
         cfg: DictConfig = compose(config_name="config")
-    
+
     data = WikiArtModule(cfg)
     data.setup()
 

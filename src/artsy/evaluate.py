@@ -17,35 +17,30 @@ log = logging.getLogger(__name__)
 def evaluate(cfg) -> None:
     """Evaluating the trained art classification model"""
     print("Evaluating the trained model")
-    
+
     dataset = WikiArtModule(cfg)
     dataset.setup()
-    # breakpoint()
     test_dataloader = dataset.test_dataloader()
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
-
     model = ArtsyClassifier.load_from_checkpoint(checkpoint_path=model_checkpoint, strict=True, map_location=torch.device("cpu"))
-    # breakpoint()
 
-    trainer = Trainer(accelerator=ACCELERATOR, 
-                      devices=1, 
-                      logger=False, 
-                      enable_checkpointing = False, 
+    trainer = Trainer(accelerator=ACCELERATOR,
+                      devices=1,
+                      logger=False,
+                      enable_checkpointing = False,
                     #   precision="16-mixed",
                       )
 
     results = trainer.test(model=model, dataloaders=test_dataloader, verbose=False)
-    breakpoint()
-
     test_loss = results[0]["test_loss"]
 
     print("Test loss: ", test_loss)
-    
+
     # # model.load_state_dict(torch.load(model_checkpoint, weights_only=True))
     # model.load_state_dict(torch.load(model_checkpoint)["state_dict"])
-    
-    
+
+
 
     # model.eval()
     # model.half()
