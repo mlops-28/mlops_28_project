@@ -1,0 +1,65 @@
+name: DVC Workflow
+
+on:
+  pull_request:
+    branches:
+    - main
+    paths:
+    - '**/*.dvc'
+    - '.dvc/**'
+  push:
+    brances:
+    - main
+    paths:
+    - '**/*.dvc'
+    - '.dvc/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dataset_statistics:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        python-version: 3.12
+        cache: 'uv'
+
+    - name: Install dependencies
+      run: |
+        uv sync --dev
+
+    - name: Authenticate with GCP
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Pull data
+      run: |
+        uv run dvc pull --no-run-cache
+
+    - name: Check data statistics & generate report
+      run: |
+        uv run -m src.artsy.data_stats > data_statistics.md
+        echo '![](./reports/figures/samples_0_to_15.png "Wikiart samples")' >> data_statistics.md
+        echo '![](./reports/figures/train_label_distribution.png "Train label distribution")' >> data_statistics.md
+        echo '![](./reports/figures/test_label_distribution.png "Test label distribution")' >> data_statistics.md
+
+    - name: Setup cml
+      uses: iterative/setup-cml@v2
+
+    - name: Comment on PR
+      env:
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cml comment create data_statistics.md --watermark-title="Data Checker" # (1)!

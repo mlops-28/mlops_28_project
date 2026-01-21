@@ -9,6 +9,12 @@ PYTHON_VERSION = "3.12"
 
 # Project commands
 @task
+def stats(ctx: Context) -> None:
+    """Run stats on processed dataset"""
+    ctx.run(f"uv run src/{PROJECT_NAME}/data_stats.py 15", echo=True, pty=not WINDOWS)
+
+
+@task
 def preprocess_data(ctx: Context) -> None:
     """Preprocess data."""
     ctx.run(f"uv run src/{PROJECT_NAME}/data.py data/raw data/processed", echo=True, pty=not WINDOWS)
