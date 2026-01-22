@@ -26,7 +26,12 @@ def evaluate(cfg) -> None:
     test_dataloader = dataset.test_dataloader()
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
-    model = ArtsyClassifier.load_from_checkpoint(checkpoint_path=model_checkpoint, strict=True, map_location=DEVICE)
+    model = ArtsyClassifier.load_from_checkpoint(
+        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE
+    )
+    # Save_hyperparameters added to model, so cfg=cfg can be removed later
+
+    model.eval()
 
     trainer = Trainer(accelerator=ACCELERATOR, devices=1, logger=False, enable_checkpointing=False)
 

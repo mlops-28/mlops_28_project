@@ -15,6 +15,7 @@ class ArtsyClassifier(LightningModule):
     def __init__(self, cfg: DictConfig) -> None:
         # def __init__(self, lr: float = 1e-3, drop_p: float = 0.2) -> None:
         super().__init__()
+        self.save_hyperparameters()
         # Out: floor((in + 2*padding - kernel_size) / stride) + 1
         self.conv1 = nn.Conv2d(
             in_channels=cfg.model.in_channels,

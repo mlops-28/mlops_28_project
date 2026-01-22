@@ -21,10 +21,12 @@ def train(cfg) -> None:
     dataset = WikiArtModule(cfg)
     dataset.setup()
     train_loader, val_loader = dataset.train_dataloader(), dataset.val_dataloader()
-    model = ArtsyClassifier()
+    model = ArtsyClassifier(cfg)
 
     checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
-    early_stopping_callback = EarlyStopping(monitor="val_loss", patience=3, verbose=True, mode="min")
+    early_stopping_callback = EarlyStopping(
+        monitor="val_loss", patience=3, verbose=True, mode="min"
+    )  # Remove verbosity later
 
     # trainer = Trainer(accelerator=ACCELERATOR, callbacks=[checkpoint_callback]) # Check precision of input and model matches
 
