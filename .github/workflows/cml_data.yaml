@@ -8,7 +8,7 @@ on:
     - '**/*.dvc'
     - '.dvc/**'
   push:
-    brances:
+    branches:
     - main
     paths:
     - '**/*.dvc'

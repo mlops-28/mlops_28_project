@@ -2,21 +2,21 @@
 * [ ] Test that whole group can access data in cloud (M21)
 
 - S
-
+* [ ] Construct evaluate docker file (M10)
+* [ ] Build the docker file locally and make sure it work as intended (M10)
 
 - N
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (Wandb) (M14)
 
 - B
-* [ ] Setup continues integration for api unit test (M24)
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [ ] Construct train docker file (M10)
+* [ ] Construct api docker file
+* [ ] Build the docker files locally and make sure they work as intended (M10)
 
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
 * [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (Typer) (M9)
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
 * [ ] Use profiling to optimize your code (M12)
 
@@ -24,11 +24,10 @@
 
 ### Week 1
 - Core
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
 
 ### Week 2
 - Core
+* [ ] Unit test of train
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
@@ -41,6 +40,7 @@
 ### Week 3
 - Core
 * [ ] Deploy to the cloud a drift detection API (M27)
+* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 
 - Optional
 * [ ] Instrument your API with a couple of system metrics (M28)
