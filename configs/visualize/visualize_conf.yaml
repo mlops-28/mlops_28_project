@@ -1,4 +1,3 @@
-figure_name: "training_loss.png"
 labels:
   map:
     9: 0
@@ -13,5 +12,8 @@ labels:
     21: "Realism"
     23: "Romanticism"
 figures:
+  train_loss: "training_loss.png"
   confusion_matrix: "confusion_matrix.png"
   example_predictions: "predicted_vs_true_labels.png"
+logs:
+  loss_logs: "./outputs/2026-01-21/14-07-42/lightning_logs/version_0/metrics.csv"

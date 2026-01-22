@@ -3,9 +3,8 @@ import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import pandas as pd
 import torch
-from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 from artsy import _PATH_CONFIGS, _PROJECT_ROOT
@@ -16,10 +15,10 @@ ACCELERATOR = "mps" if torch.backends.mps.is_available() else "auto"
 
 log = logging.getLogger(__name__)
 
-@hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml")
+@hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
 def visualize(cfg) -> None:
-    """Function to confusion matrix, and prediciton vs. target images"""
-    print("Visualizing")
+    """Function to plot losses, confusion matrix, and prediciton vs. target images"""
+    print("Loading dataset, model, and checkpoints")
     dataset = WikiArtModule(cfg)
     dataset.setup(stage="test")
     test_dataloader = dataset.test_dataloader()
@@ -33,79 +32,83 @@ def visualize(cfg) -> None:
     
     model.eval()
 
-    model.fc = torch.nn.Identity()
+    print("Plotting losses")
 
-    embeddings_list: list[torch.Tensor] = []
-    targets_list: list[torch.Tensor] = []
-
-    with torch.inference_mode():
-        for batch in test_dataloader:
-            images, targets = batch
-            embeddings = model(images)
-            embeddings_list.append(embeddings)
-            targets_list.append(targets)
+    df = pd.read_csv(cfg.visualize.logs.loss_logs)
     
-    embeddings = torch.cat(embeddings_list).cpu().numpy()
-    targets = torch.cat(targets_list).cpu().numpy()
+    train_loss = df["train_loss"].dropna()
+    train_loss_smooth = train_loss.rolling(window=50, min_periods=1).mean()
+    val_loss = df["val_loss"].dropna()
+    val_loss_smooth = val_loss.rolling(window=50, min_periods=1).mean()
 
-    if embeddings.shape[1] > 500:
-        pca = PCA(n_components=100)
-        embeddings = pca.fit_transform(embeddings)
-    tsne = TSNE(n_components=2)
-    embeddings = tsne.fit_transform(embeddings)
-
-    plt.figure(figsize=(10,10))
-    for label in sorted(set(targets)):
-        mask = targets == label
-        plt.scatter(embeddings[mask, 0], embeddings[mask, 1], label=str(label), s=5)
-    
-    plt.legend(markerscale=2)
+    fig, ax = plt.subplots(1,2,figsize=(10,8))
+    ax[0].plot(train_loss.values)
+    ax[0].set_xlabel("Step")
+    ax[0].set_title("Training loss")
+    ax[1].plot(val_loss.values)
+    ax[1].set_xlabel("Epoch")
+    ax[1].set_title("Validation loss")
+    fig.supylabel("Loss")
     plt.tight_layout()
-    plt.savefig(f"reports/figures/{cfg.figure_name}")
+    plt.savefig(f"./reports/figures/losses.png")
     plt.close()
 
-    # Plotting confusion matrix
+    fig, ax = plt.subplots(1,2,figsize=(10,8))
+    ax[0].plot(train_loss_smooth.values)
+    ax[0].set_xlabel("Step")
+    ax[0].set_title("Training loss")
+    ax[1].plot(val_loss_smooth.values)
+    ax[1].set_xlabel("Epoch")
+    ax[1].set_title("Validation loss")
+    fig.supxlabel("Step")
+    fig.supylabel("Loss")
+    plt.tight_layout()
+    plt.savefig(f"./reports/figures/losses_smooth.png")
+    plt.close()
+
+    ### Plotting confusion matrix
+    print("Running the trained model in inference mode")
     preds_list: list[torch.Tensor] = []
     targets_list: list[torch.Tensor] = []
     images_list: list[torch.Tensor] = []
 
     with torch.inference_mode():
         for images, targets in test_dataloader:
+            images = images.float()
             logits = model(images)
             preds = torch.argmax(logits, dim=1)
 
             preds_list.append(preds)
             images_list.append(images)
             targets_list.append(targets)
-    
+            
     preds = torch.cat(preds_list).cpu().numpy()
     images = torch.cat(images_list).cpu().numpy()
     targets = torch.cat(targets_list).cpu().numpy()
-
     inv_label_map = {v: k for k, v in model.label_map.items()}
 
-    preds_orig = np.array([inv_label_map[p] for p in preds])
-    targets_orig = np.array([inv_label_map[t] for t in targets])
+    preds_orig = [inv_label_map[p.item()] for p in preds]
+    preds_orig = torch.Tensor(preds_orig)
 
-    label_names = cfg.labels.names 
+    label_names_df = cfg.visualize.labels.names 
+    label_names = list(label_names_df.values())
 
-    pred_names = [label_names[l] for l in preds_orig]
-    target_names = [label_names[l] for l in targets_orig]
+    pred_names = [label_names_df[l] for l in preds_orig.tolist()]
+    target_names = [label_names_df[l] for l in targets.tolist()]
 
-    ordered_labels = sorted(label_names.keys())
-    
-    cm = confusion_matrix(targets_orig, preds_orig, labels=ordered_labels)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=[label_names[l] for l in ordered_labels])
-
+    print("Creating confusion matrix")
+    cm = confusion_matrix(target_names, pred_names, labels=label_names)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=label_names)
     plt.figure(figsize=(8,8))
     disp.plot(xticks_rotation=45, cmap="Blues", colorbar=False)
     plt.tight_layout()
-    plt.savefig(f"reports/figures/{cfg.figures.confusion_matrix}")
+    plt.savefig(f"./reports/figures/{cfg.visualize.figures.confusion_matrix}")
     plt.close()
 
     # Plotting preidcted vs. true labels
+    print("Plotting true vs. predicted labels")
     num_examples = 10
-    indices = np.random.choice(len(images), num_examples, replaced = False)
+    indices = np.random.choice(len(images), num_examples)
 
     fig, axes = plt.subplots(2, 5, figsize=(15, 6))
     axes = axes.flatten()
@@ -116,14 +119,20 @@ def visualize(cfg) -> None:
         if img.shape[0] == 1:
             ax.imshow(img.squeeze(0), cmap="gray")
         else:
-            ax.imshow(img.permute(1,2,0))
+            ax.imshow(img.transpose(1,2,0))
         
-        true_label = label_names[int(targets_orig[idx])]
-        pred_label = label_names[int(preds_orig[idx])]
+        true_label = label_names_df[int(targets[idx])]
+        pred_label = label_names_df[int(preds_orig[idx])]
 
-        ax.set_title(f"True: {true_label}. Predicted: {pred_label}")
+        ax.set_title(f"True: {true_label}\nPredicted: {pred_label}")
         ax.axis("off")
     
     plt.tight_layout()
-    plt.savefig(cfg.figures.example_predictions)
+    plt.savefig(f"./reports/figures/{cfg.visualize.figures.example_predictions}")
     plt.close()
+
+    print("Done plotting!")
+
+if __name__ == "__main__":
+    print("Calling visualize")
+    visualize()
