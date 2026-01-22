@@ -26,6 +26,7 @@ class WikiArtModule(L.LightningDataModule):
         self.image_size = cfg.data.hyperparameters.image_size
         # self.processed_data_path = cfg.data.hyperparameters.processed_data_path
         self.processed_data_path = os.path.join(_PATH_DATA, "processed")
+        self.max_per_class = cfg.data.hyperparameters.max_per_class
         self.nsamples = cfg.data.hyperparameters.nsamples
         self.labels_to_keep = cfg.data.hyperparameters.labels_to_keep
         self.data_split = cfg.data.hyperparameters.train_val_test
@@ -36,7 +37,7 @@ class WikiArtModule(L.LightningDataModule):
                 v2.CenterCrop(self.image_size),  # center crop to 256x256
                 v2.Lambda(lambda x: x.convert("RGB")),
                 v2.ToImage(),  # uint8 tensor [C,H,W]
-                v2.ToDtype(torch.float16, scale=True),  # Converts to float16 and scales [0, 255] -> [0.0, 1.0]
+                v2.ToDtype(torch.float32, scale=True),  # Converts to float16 and scales [0, 255] -> [0.0, 1.0]
             ]
         )
 
@@ -80,12 +81,11 @@ class WikiArtModule(L.LightningDataModule):
 
         self.ds = self.ds.filter(lambda x: x["style"] in self.labels_to_keep)
 
-        max_per_class = 6450
         counters = {n: 0 for n in self.labels_to_keep}
 
         def keep_limited(x: Mapping) -> bool:
             label = x["style"]
-            if counters[label] <= max_per_class:
+            if counters[label] < self.max_per_class:
                 counters[label] += 1
                 return True
             return False

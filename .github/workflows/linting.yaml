@@ -16,14 +16,14 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        python-version: ["3.12", "3.11"]
+        python-version: ["3.13", "3.12"]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
       - name: Set up uv
-        uses: astal-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
@@ -34,8 +34,8 @@ jobs:
 
       - name: ruff check
         run: |
-          ruff check .
+          uv run ruff check .
 
       - name: ruff format
         run: |
-          ruff format .
+          uv run ruff format .

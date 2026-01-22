@@ -15,14 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        python-version: ["3.12", "3.11"]
+        python-version: ["3.13", "3.12"]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
       - name: Set up uv
-        uses: astal-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
@@ -33,6 +33,5 @@ jobs:
 
       - name: Run tests & coverage
         run: |
-          uv run pytest -v
-          uv run coverage run -m pytest tests/
+          uv run coverage run --source=src -m pytest -v
           uv run coverage report -m
