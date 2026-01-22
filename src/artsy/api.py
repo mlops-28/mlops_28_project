@@ -81,6 +81,7 @@ async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = F
     img = datasetup.transform(input_image)
 
     # Send image through model
+    img = img.to(DEVICE)
     logits = model(img.unsqueeze(0))
 
     prediction_idx = torch.argmax(logits, dim=1)
