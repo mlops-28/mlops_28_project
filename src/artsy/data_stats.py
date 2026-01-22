@@ -1,11 +1,11 @@
 import torch
 import typer
 import matplotlib.pyplot as plt
-from src.artsy.data import WikiArtModule
+from artsy.data import WikiArtModule
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 
-from src.artsy import _PATH_CONFIGS
+from artsy import _PATH_CONFIGS
 
 
 def data_statistics(nimages: int = 15) -> None:
