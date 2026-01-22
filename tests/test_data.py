@@ -1,12 +1,12 @@
 from torch.utils.data import DataLoader
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
-from src.artsy.data import WikiArtModule
 import pytest
 import os
 import torch
 
-from src.artsy import _PATH_CONFIGS
+from artsy.data import WikiArtModule
+from tests import _PATH_CONFIGS
 
 
 @pytest.mark.skipif(not os.path.exists("data/processed/"), reason="Data files not found")
