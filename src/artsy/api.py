@@ -14,6 +14,7 @@ from artsy.model import ArtsyClassifier
 from artsy.data import WikiArtModule
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+os.makedirs("data/api", exist_ok=True)
 
 
 @asynccontextmanager
@@ -47,14 +48,16 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-def add_to_database(
-    now: str,
-    img: torch.Tensor,
-    prediction: int,
-) -> None:
-    """Simple function to add image as tensor and prediction to database."""
+def add_to_database(timestamp: str, img: torch.Tensor, prediction: int) -> None:
+    """Simple function to save image path and prediction to database."""
+
+    # Save image (for now just do it locally, the files should be small)
+    filename = f"{timestamp}.pt"
+    file_path = os.path.join("data/api", filename)
+    torch.save(img, file_path)
+
     with open("prediction_database.csv", "a") as file:
-        file.write(f"{now}, {img}, {prediction}\n")
+        file.write(f"{timestamp},{file_path},{prediction}\n")
 
 
 @app.get("/")
@@ -83,8 +86,8 @@ async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = F
     prediction = int(prediction)
 
     # Save image and prediction (?)
-    now = str(datetime.utcnow().timestamp())
-    background_tasks.add_task(add_to_database, now, img, prediction)
+    timestamp = str(datetime.utcnow().timestamp())
+    background_tasks.add_task(add_to_database, timestamp, img, prediction)
 
     # Get real label
     data_path = datasetup.processed_data_path
