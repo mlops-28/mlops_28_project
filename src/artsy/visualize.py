@@ -50,7 +50,7 @@ def visualize(cfg) -> None:
     ax[1].set_title("Validation loss")
     fig.supylabel("Loss")
     plt.tight_layout()
-    plt.savefig(f"./reports/figures/losses.png")
+    plt.savefig("./reports/figures/losses.png")
     plt.close()
 
     fig, ax = plt.subplots(1,2,figsize=(10,8))
@@ -63,7 +63,7 @@ def visualize(cfg) -> None:
     fig.supxlabel("Step")
     fig.supylabel("Loss")
     plt.tight_layout()
-    plt.savefig(f"./reports/figures/losses_smooth.png")
+    plt.savefig("./reports/figures/losses_smooth.png")
     plt.close()
 
     ### Plotting confusion matrix
@@ -93,8 +93,8 @@ def visualize(cfg) -> None:
     label_names_df = cfg.visualize.labels.names 
     label_names = list(label_names_df.values())
 
-    pred_names = [label_names_df[l] for l in preds_orig.tolist()]
-    target_names = [label_names_df[l] for l in targets.tolist()]
+    pred_names = [label_names_df[label] for label in preds_orig.tolist()]
+    target_names = [label_names_df[label] for label in targets.tolist()]
 
     print("Creating confusion matrix")
     cm = confusion_matrix(target_names, pred_names, labels=label_names)
