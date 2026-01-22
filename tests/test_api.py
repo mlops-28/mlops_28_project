@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
-from src.artsy.api import app
+from artsy.api import app
 import os
 import io
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
-from src.artsy import _PATH_CONFIGS
+from artsy import _PATH_CONFIGS
 import pandas as pd
 from PIL import Image
 
