@@ -1,7 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
 from http import HTTPStatus
 import torch
+from datetime import datetime
 import os
+import pandas as pd
 from PIL import Image
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
@@ -31,6 +33,9 @@ async def lifespan(app: FastAPI):
     model.to(DEVICE)
     model.eval()
 
+    with open("prediction_database.csv", "w") as file:
+        file.write("img,prediction\n")
+
     yield
 
     print("Cleaning up")
@@ -40,6 +45,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+def add_to_database(
+    now: str,
+    img: torch.Tensor,
+    prediction: int,
+) -> None:
+    """Simple function to add image as tensor and prediction to database."""
+    with open("prediction_database.csv", "a") as file:
+        file.write(f"{now}, {img}, {prediction}\n")
 
 
 @app.get("/")
@@ -53,7 +68,7 @@ def root():
 
 
 @app.post("/predict/")
-async def get_prediction(data: UploadFile = File(...)):
+async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = File(...)):
     # Load input image
     input_image = Image.open(data.file)
 
@@ -65,13 +80,21 @@ async def get_prediction(data: UploadFile = File(...)):
 
     prediction_idx = torch.argmax(logits, dim=1)
     prediction = list(model.label_map.keys())[prediction_idx]
+    prediction = int(prediction)
 
     # Save image and prediction (?)
-    #
+    now = str(datetime.utcnow().timestamp())
+    background_tasks.add_task(add_to_database, now, img, prediction)
+
+    # Get real label
+    data_path = datasetup.processed_data_path
+    style_path = os.path.join(data_path, "styles.txt")
+    styles = pd.read_csv(style_path, sep=",")
+    label = str(styles.at[prediction, "style"])
 
     # Create response
     response = {
-        "prediction": int(prediction),
+        "prediction": label,
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
     }
