@@ -1,0 +1,19 @@
+labels:
+  map:
+    9: 0
+    12: 1
+    20: 2
+    21: 3
+    23: 4
+  names:
+    9: "Expresionism"
+    12: "Impressionism"
+    20: "Post Impressionism"
+    21: "Realism"
+    23: "Romanticism"
+figures:
+  train_loss: "training_loss.png"
+  confusion_matrix: "confusion_matrix.png"
+  example_predictions: "predicted_vs_true_labels.png"
+logs:
+  loss_logs: "./outputs/2026-01-21/14-07-42/lightning_logs/version_0/metrics.csv"

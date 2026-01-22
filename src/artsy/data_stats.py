@@ -42,7 +42,7 @@ def data_statistics(nimages: int = 15) -> None:
     for i in range(nimages):
         plt.subplot(nrows, 5, i + 1)
         plt.imshow(trainset[i][0].to(torch.float32).permute(1, 2, 0).numpy())
-        plt.title(f"Image {i+1} target = {int(trainset[i][1])}")
+        plt.title(f"Image {i + 1} target = {int(trainset[i][1])}")
     plt.savefig("reports/figures/samples_0_to_15.png")
     plt.close()
 

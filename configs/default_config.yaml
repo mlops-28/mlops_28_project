@@ -2,4 +2,6 @@ defaults:
   - _self_
   - data: data_conf
   - eval: eval_conf
+  - model: model_conf
   - trainer: trainer_conf
+  - visualize: visualize_conf
