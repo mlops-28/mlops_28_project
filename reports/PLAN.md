@@ -2,7 +2,7 @@
 * [ ] Test that whole group can access data in cloud (M21)
 
 - S
-* [ ] Create visualize.py
+
 
 - N
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
