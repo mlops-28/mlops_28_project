@@ -13,6 +13,7 @@
 - B
 * [ ] Setup continues integration for api unit test (M24)
 * [ ] Check how robust your model is towards data drifting (M27)
+* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
       
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
@@ -42,7 +43,6 @@
 ### Week 3
 --Core
 * [ ] Deploy to the cloud a drift detection API (M27)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
       
 --Optional
 * [ ] Instrument your API with a couple of system metrics (M28)
