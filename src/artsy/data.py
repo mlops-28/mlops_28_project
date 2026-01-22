@@ -11,7 +11,7 @@ from tqdm import tqdm
 from omegaconf import DictConfig
 from typing import Mapping, Optional
 
-from src.artsy import _PATH_DATA
+from artsy import _PATH_DATA
 
 
 class WikiArtModule(L.LightningDataModule):
