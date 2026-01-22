@@ -17,7 +17,6 @@
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
 * [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (Typer) (M9)
 * [ ] Do a bit of code typing and remember to document essential parts of your code (M7) (Adding types to functions)
 * [ ] Use profiling to optimize your code (M12)
 
