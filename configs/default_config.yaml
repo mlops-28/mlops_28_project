@@ -4,3 +4,4 @@ defaults:
   - eval: eval_conf
   - model: model_conf
   - trainer: trainer_conf
+  - visualize: visualize_conf
