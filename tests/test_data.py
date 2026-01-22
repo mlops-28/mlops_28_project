@@ -2,14 +2,17 @@ from torch.utils.data import DataLoader
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 import pytest
-import os
 import torch
+from pathlib import Path
 
 from artsy.data import WikiArtModule
 from tests import _PATH_CONFIGS
 
+processed_dir = Path("data/processed")
+pt_files = list(processed_dir.glob("*.pt"))
 
-@pytest.mark.skipif(not os.path.exists("data/processed/"), reason="Data files not found")
+
+@pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_my_dataset():
     """Test the WikiArtModule class."""
 
