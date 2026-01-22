@@ -11,10 +11,9 @@
 * [ ] Update evaluate to display accuracy
       
 - B
-* [ ] Create a FastAPI application that can do inference using your model (M22)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
-
+* [ ] Setup continues integration for api unit test (M24)
+* [ ] Check how robust your model is towards data drifting (M27)
+      
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
 * [ ] Remember to keep your `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
@@ -34,6 +33,7 @@
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
+      
 --Optional
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
@@ -41,10 +41,9 @@
 
 ### Week 3
 --Core
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] Setup collection of input-output data from your deployed application (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+      
 --Optional
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
