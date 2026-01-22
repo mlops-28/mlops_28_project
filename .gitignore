@@ -3,6 +3,7 @@ docs/site/
 # folders
 data/processed/
 outputs/*
+models/
 
 # test cache
 manual_test/

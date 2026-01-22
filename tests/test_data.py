@@ -19,12 +19,12 @@ def test_my_dataset():
     data = WikiArtModule(cfg)
     data.setup()
 
-    image_size = cfg.data.hyperparameters.image_size
-    # max_per_class = cfg.data.hyperparameters.max_per_class
-    # nsamples = cfg.data.hyperparameters.nsamples
-    labels_to_keep = cfg.data.hyperparameters.labels_to_keep
+    image_size = cfg.data.image_size
+    # max_per_class = cfg.data.max_per_class
+    # nsamples = cfg.data.nsamples
+    labels_to_keep = cfg.data.labels_to_keep
     # nclasses = len(labels_to_keep)
-    # train_val_test = cfg.data.hyperparameters.train_val_test
+    # train_val_test = cfg.data.train_val_test
 
     # Assert we have right total amount of data
     # assert len(data.trainset) + len(data.valset) + len(data.testset) == int(nclasses * max_per_class)
