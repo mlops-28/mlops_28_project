@@ -2,16 +2,17 @@
 * [ ] Test that whole group can access data in cloud (M21)
 
 - S
-
+* [ ] Construct evaluate docker file (M10)
+* [ ] Build the docker file locally and make sure it work as intended (M10)
 
 - N
 * [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
 * [ ] Consider running a hyperparameter optimization sweep (Wandb) (M14)
 
 - B
-* [ ] Setup continues integration for api unit test (M24)
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [ ] Construct train docker file (M10)
+* [ ] Construct api docker file
+* [ ] Build the docker files locally and make sure they work as intended (M10)
 
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
@@ -24,8 +25,6 @@
 
 ### Week 1
 - Core
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
 
 ### Week 2
 - Core
@@ -41,6 +40,7 @@
 ### Week 3
 - Core
 * [ ] Deploy to the cloud a drift detection API (M27)
+* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
 
 - Optional
 * [ ] Instrument your API with a couple of system metrics (M28)
