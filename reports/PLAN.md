@@ -28,6 +28,7 @@
 
 ### Week 2
 - Core
+* [ ] Unit test of train
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
