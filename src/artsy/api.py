@@ -30,7 +30,9 @@ async def lifespan(app: FastAPI):
 
     datasetup = WikiArtModule(cfg)
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
-    model = ArtsyClassifier.load_from_checkpoint(checkpoint_path=model_checkpoint, strict=True, map_location=DEVICE)
+    model = ArtsyClassifier.load_from_checkpoint(
+        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE
+    )
     model.to(DEVICE)
     model.eval()
 
