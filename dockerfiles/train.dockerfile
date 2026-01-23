@@ -13,7 +13,6 @@ COPY src src/
 COPY configs configs/
 COPY README.md LICENSE ./
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen
+RUN uv sync --frozen
 
 ENTRYPOINT ["uv", "run", "src/artsy/train.py"]
