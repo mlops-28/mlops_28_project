@@ -24,7 +24,6 @@ class WikiArtModule(L.LightningDataModule):
         self.seed = cfg.data.seed
         self.batch_size = cfg.data.batch_size
         self.image_size = cfg.data.image_size
-        # self.processed_data_path = cfg.data.processed_data_path
         self.processed_data_path = os.path.join(_PATH_DATA, "processed")
         self.max_per_class = cfg.data.max_per_class
         self.nsamples = cfg.data.nsamples
