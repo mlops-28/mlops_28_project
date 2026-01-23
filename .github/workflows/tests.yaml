@@ -56,7 +56,6 @@ jobs:
 
   build2:
     needs: [test, build1]
-
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
