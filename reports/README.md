@@ -184,7 +184,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 5 fill here ---
+--- From the cookie cutter template we have filled out .github/workflows/, onfigs/, data/, dockerfiles/, models/, reports/, src/, tests/, .gitignore, pyproject.toml, and README.md. We have not worked on publishing our documentation, so we have not worked in the docs/ folder. We have added the folders .devcontainer/, .dvc/, artifacts/, and outputs/. .devcontainer/ is made when running the docker images. .dvc/ is used for storing and pulling our data. artifacts/ contains the model, that has been downloaded from wandb, by default the model we deploy, but this can be changed. This is the model we evaluate and use visualize our confusion matrix and true versus predicted labels. outputs/ is where the logged outputs for modelperformance and parameters are stored in subfolders of first dates, and then timestamps. ---
 
 ### Question 6
 
@@ -218,7 +218,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We have implemeneted 14 unit tests. These test dataset, to make sure that the images have the right shape and type, that the data is loaded correctly, and that only images with relevant labels are included in the dataset. For the model, we test that the model output is equal to the batch size of the input, that the model outputs the correct number of mapped labels, and that the output also has the correct number of classes. For the training, we test that the cofig file is loaded as a DictConfig, and that it contains the correct keys for running the training script. Then we test if the train_loader and val_loader form the datamodule load, that the trainer runs when accelerator is cpu, and run a smoke test to see if the training starts and completes without crashing. Finally, we test that the checkpoints are created when running the model, and that test and validation loss exist, are tensors, and are not negative. ---
+--- We have implemeneted 14 unit tests. These test dataset, to make sure that the images have the right shape and type, that data is loaded correctly, and that only images with relevant labels are included. Model test are that the model output is equal to the batch size of the input, that the model output has the correct number of mapped labels and correct number of classes. Training tests are that the config file is loaded as a DictConfig and contains the correct keys, if the train_loader and val_loader from the datamodule load, that the trainer runs when accelerator is cpu, and a smoke test to see if the training starts and completes without crashing. Finally, we test that the checkpoints are created, and that test and validation loss exist, are tensors, and not negative. ---
 
 ### Question 8
 
@@ -299,7 +299,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- In order to configure our experiments we created config files, and used hydra to load them. By doing this, we could, for example, call uv run src/artsy/train.py model.lr=1e-3 trainer.max_epochs=50. By doing this we get a log of the parameters used for a given experiment. ---
+--- In order to configure our experiments we created config files, and used hydra to load them. By doing this, we could, for example, call uv run src/artsy/train.py model.lr=1e-3 trainer.max_epochs=50. By doing this we get a log of the parameters used for a given experiment, which means that we can go back and check what parameters gave which result. ---
 
 ### Question 13
 
@@ -314,7 +314,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- One of the things we did to reporduce experiments was making config files for the different tasks related to the model. We made a default config file, and then we made config files for each of the scripts, such that we had standard values running for each experiment, unless manually changed when calling the code. SKRIV MERE HER ---
+--- One of the things we did to reporduce experiments was making config files for the different tasks related to the model. We made a default config file, and then we made config files for each of the scripts, such that we had standard values running for each experiment, unless manually changed when calling the code. Furthermore we stored the parameters used for each experiment in the same folders as the performance metrix are stored in, so we can easily see which parameters produced which results. By doing this, we can easily rerun the model with those parameters, to reproduce the results. ---
 
 ### Question 14
 
@@ -331,7 +331,8 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 14 fill here ---
+--- ![my_image](figures/wandb_logging.png) 
+The above image shows that we have tracked accuracy and loss for both training and validation. Training loss shows if the model is improving when as it's training, and accuracy shows how good it is at labeling the images. This can also be used to see if the model improves. However, in order to make sure, that the model isn't just performing very well on the specific images, it is training on, we also track validation to see, if it can also classify new images, and to make sure, that the model doesn't overfit. By having the overlapping graphs, we can also compare the different versions of the model, created when running the model sweep, to see which one performs the best. ---
 
 ### Question 15
 
@@ -346,7 +347,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We made two docker images, one for training and one for evaluating script. To run the traning docker image, you use `docker run train:latest`. ADD LINK, SKRIV MERE---
+--- We made three docker images, one for training, one for evaluating script and one for api. To run the api docker image in the cloud, we used `gcloud run deploy wikiart-api --image europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-api:latest --region europe-west1 --execution-environment gen2 --allow-unauthenticated`. Once a docker image has been created, it is pushed to the cloud. Ideally it would be integrated with Weights and Biases, but we have not been able to make this integration. The api docker image is run in cloud, and is where our api is hosted. We weren't quite sure what link you were asking for in regards to the dockerfile, but the link to the dockerfile in the cloud is <https://l.messenger.com/l.php?u=https%3A%2F%2Fconsole.cloud.google.com%2Fartifacts%2Fdocker%2Feighth-saga-484310-f8%2Feurope-west1%2Fwikiart-registry%2Fwikiart-api%3Fauthuser%3D1%26project%3Deighth-saga-484310-f8&h=AT1zKkGRNJOIzJrEXVDCRhftdimZIAz0vcE8uMkhnipX1sX6_eY2fDd1DKOhvFDyxfeo15AZHSP4F6oxSrqr9MSKLZjx5ZA-FA_9rR76coYZf8mJg3ku2eeSNrLBPrx_6EVZwg>, and for git the dockerfiles can be found in this folder <https://github.com/mlops-28/mlops_28_project/tree/main/dockerfiles>. ---
 
 ### Question 16
 
@@ -378,7 +379,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 17 fill here ---
+--- We used Bucket, Artifact Registry, and Vertex AI throughout the project. We used Bucket for storing the data we used when working on the model. Artifact Registry was used for storing the docker files we created for training and evaluate, and Vertex AI was used to train the model. ---
 
 ### Question 18
 
@@ -402,7 +403,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 19 fill here ---
+--- ![my_image](figures/wikiart_bucket.png)  ---
 
 ### Question 20
 
@@ -411,7 +412,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 20 fill here ---
+--- ![my_image](figures/wandb_registry.png)  ---
 
 ### Question 21
 
@@ -420,7 +421,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 21 fill here ---
+--- ![my_image](figures/wandb_build.png)  ---
 
 ### Question 22
 
@@ -517,7 +518,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- Bella used XXX credits, Nikolai used XXX credits, and Sofie used 42 credits. The most expensive servise was ???. Working in the cloud was difficult, there are a lot of things, that need to work together, for it to work correctly, especially when trying to also work with docker and Wands and Biases. Given more time, to work specifically with the cloud, we are sure, that it is a very beneficial tool. ---
+--- Bella used $1.7 in credits, Nikolai used $0.03 in credits, and Sofie used 42 kr. in credits. The most expensive servises were Cloud Storage and Compute Engine. Working in the cloud was difficult, there are a lot of things, that need to work together, for it to work correctly, especially when trying to also work with docker and Weights and Biases. Due to the time constraints of the project, it was hard to get a full understanding of Google Cloud, which also made it very hard to integrate with the project. Given more time, to work specifically with the cloud, we are sure, that it is a very beneficial tool for storing and running models faster and across multiple devices. ---
 
 ### Question 28
 
@@ -564,7 +565,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- The biggest challenge in the project was working with the cloud. Integrating DVC and running the code with the data stored in the cloud was difficult, and has taken a long time to implement. Furthermore getting it to work across different machines was also quite a challenge. ---
+--- One of the biggest challenge in the project was working with the cloud. Integrating DVC and running the code with the data stored in the cloud was difficult, and has taken a long time to implement. Furthermore getting it to work across different machines was also quite a challenge. Time has also been a challenge, as there is a lot of different parts that we first have to learn, and then having to get them to work together. In order to deal with this, we divided the tasks, where each person started with tasks they understood the best, so we got as much as we could done without getting stuck. By doing this, we also got a better understanding of other tasks, making progressing with those easier. Continuous workflows were also hard to work with, no real strategy was made, besides continuing to work with them, until they worked. ---
 
 ### Question 31
 
