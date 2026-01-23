@@ -1,17 +1,18 @@
-import pandas as pd
-import numpy as np
-import torch
 import time
+
+import argparse
 from evidently import Report
 from evidently.presets import DataDriftPreset
-from data import WikiArtModule
 from hydra import compose, initialize_config_dir
-from omegaconf import DictConfig
-from torch.utils.data import Dataset, DataLoader
-import argparse
 import matplotlib.pyplot as plt
+import numpy as np
+from omegaconf import DictConfig
+import pandas as pd
+import torch
+from torch.utils.data import Dataset, DataLoader
 
 from artsy import _PATH_CONFIGS
+from artsy.data import WikiArtModule
 
 
 class ArtAPIDataset(Dataset):
@@ -58,6 +59,7 @@ def extract_features_batch(dataloader):
 
 
 if __name__ == "__main__":
+    print("Running data_drift.py")
     ## Load new data
     parser = argparse.ArgumentParser()
     parser.add_argument("-path_to_csv", default="prediction_database.csv", type=str)
