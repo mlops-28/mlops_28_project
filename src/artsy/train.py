@@ -1,6 +1,7 @@
 import hydra
 import logging
-from pytorch_lightning import Trainer, seed_everything
+from omegaconf import OmegaConf
+from pytorch_lightning import Trainer, seed_everything, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import torch
 
@@ -18,6 +19,7 @@ log = logging.getLogger(__name__)
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
 def train(cfg) -> None:
     print("Setting up...")
+
     dataset = WikiArtModule(cfg)
     dataset.setup()
     train_loader, val_loader = dataset.train_dataloader(), dataset.val_dataloader()
@@ -25,20 +27,21 @@ def train(cfg) -> None:
 
     checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
     early_stopping_callback = EarlyStopping(
-        monitor="val_loss", patience=3, verbose=True, mode="min"
+        monitor="val_loss", patience=3, verbose=False, mode="min"
     )  # Remove verbosity later
-
-    # trainer = Trainer(accelerator=ACCELERATOR, callbacks=[checkpoint_callback]) # Check precision of input and model matches
 
     trainer = Trainer(
         accelerator=ACCELERATOR,
+        logger=loggers.WandbLogger(
+            project="mlops_28", log_model=True, config=OmegaConf.to_container(cfg, resolve=True)
+        ),
         callbacks=[early_stopping_callback, checkpoint_callback],
         max_epochs=cfg.trainer.max_epochs if "trainer" in cfg and "max_epochs" in cfg.trainer else 999,
     )
 
     print("Starting training...")
     trainer.fit(model, train_loader, val_loader)
-    print("Done!")
+    print("Finished training!!")
 
 
 if __name__ == "__main__":
