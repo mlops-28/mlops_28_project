@@ -9,9 +9,10 @@ from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 from contextlib import asynccontextmanager
 
-from artsy import _PROJECT_ROOT, _PATH_CONFIGS
+from artsy import _PATH_CONFIGS
 from artsy.model import ArtsyClassifier
 from artsy.data import WikiArtModule
+
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 # os.makedirs("data/api", exist_ok=True)
@@ -29,12 +30,11 @@ async def lifespan(app: FastAPI):
         cfg: DictConfig = compose(config_name="default_config.yaml")
 
     datasetup = WikiArtModule(cfg)
-    gcs_model_path = f"/gcs/wikiart-models/models/{cfg.eval.model_checkpoint}"
-    local_model_path = os.path.abspath(os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint))
-    model_checkpoint = gcs_model_path if os.path.exists(gcs_model_path) else local_model_path
+
+    print("Downloading model from WandB")
 
     model = ArtsyClassifier.load_from_checkpoint(
-        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE, weights_only=False
+        checkpoint_path=cfg.eval.model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE, weights_only=False
     )
     model.to(DEVICE)
     model.eval()
