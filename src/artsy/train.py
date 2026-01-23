@@ -4,6 +4,7 @@ from omegaconf import OmegaConf
 from pytorch_lightning import Trainer, seed_everything, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import torch
+import os
 
 from artsy import _PATH_CONFIGS
 from artsy.data import WikiArtModule
@@ -25,7 +26,13 @@ def train(cfg) -> None:
     train_loader, val_loader = dataset.train_dataloader(), dataset.val_dataloader()
     model = ArtsyClassifier(cfg)
 
-    checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
+    if os.path.exists("/gcs/wikiart-models"):
+        model_dir = "/gcs/wikiart-models/models"
+    else:
+        model_dir = "./models"
+    os.makedirs(model_dir, exist_ok=True)
+
+    checkpoint_callback = ModelCheckpoint(dirpath=model_dir, monitor="val_loss", mode="min")
     early_stopping_callback = EarlyStopping(
         monitor="val_loss", patience=3, verbose=False, mode="min"
     )  # Remove verbosity later
