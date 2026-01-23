@@ -26,6 +26,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           enable-cache: true
+          version: "0.9.18"
 
       - name: Install dependencies
         run: |
@@ -52,7 +53,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
 
     - name: Submit build
-      run: gcloud builds submit . --config cloudbuild.yaml --substitutions=_IMAGE_NAME=wikiart_train:latest
+      run: gcloud builds submit . --config cloudbuild.yaml --substitutions=_IMAGE_NAME=wikiart_train:latest,_DOCKER_NAME=train
 
   build2:
     needs: [test, build1]
@@ -70,4 +71,4 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2
 
     - name: Submit build
-      run: gcloud builds submit . --config cloudbuild.yaml --substitutions=_IMAGE_NAME=wikiart_evaluate:latest
+      run: gcloud builds submit . --config cloudbuild.yaml --substitutions=_IMAGE_NAME=wikiart_evaluate:latest,_DOCKER_NAME=evaluate
