@@ -47,8 +47,8 @@ def stage_best_model_to_registry(cfg) -> None:
 
     logger.info(f"Best model found in registry: {best_artifact.name} with {metric_name}={best_metric}")
     best_artifact.link(
-        target_path=f"wandb-registry-artsy/cnn_models:{model_name}",
-        aliases=["best", "staging"],
+        target_path=f"{cfg.eval.model_registry}/{cfg.eval.collection}:{model_name}",
+        aliases=cfg.registry.staged_model_tags,
     )
     best_artifact.save()
     logger.info("Model staged to registry.")

@@ -5,7 +5,6 @@ from omegaconf import OmegaConf
 from pytorch_lightning import Trainer, seed_everything, loggers
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import torch
-import wandb
 
 from artsy import _PATH_CONFIGS
 from artsy.data import WikiArtModule
@@ -27,15 +26,20 @@ def train(cfg) -> None:
     train_loader, val_loader = dataset.train_dataloader(), dataset.val_dataloader()
     model = ArtsyClassifier(cfg)
 
-    checkpoint_callback = ModelCheckpoint(dirpath=f"models/{wandb.run.id}", monitor="val_loss", mode="min")
+    checkpoint_callback = ModelCheckpoint(dirpath="./models", monitor="val_loss", mode="min")
     early_stopping_callback = EarlyStopping(
         monitor="val_loss", patience=3, verbose=False, mode="min"
     )  # Remove verbosity later
 
+    hydra_path = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
+
     trainer = Trainer(
         accelerator=ACCELERATOR,
         logger=loggers.WandbLogger(
-            project="mlops_28", log_model=True, config=OmegaConf.to_container(cfg, resolve=True)
+            save_dir=f"{hydra_path}",
+            project="mlops_28",
+            log_model=True,
+            config=OmegaConf.to_container(cfg, resolve=True),
         ),
         callbacks=[early_stopping_callback, checkpoint_callback],
         max_epochs=cfg.trainer.max_epochs if "trainer" in cfg and "max_epochs" in cfg.trainer else 999,

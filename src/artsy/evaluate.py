@@ -1,8 +1,11 @@
-import hydra
 import logging
 import os
+
+from dotenv import load_dotenv
+import hydra
 from pytorch_lightning import Trainer, seed_everything
 import torch
+import wandb
 
 from artsy import _PATH_CONFIGS, _PROJECT_ROOT
 from artsy.data import WikiArtModule
@@ -14,6 +17,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 seed_everything(seed=42, workers=True)
 
 log = logging.getLogger(__name__)
+load_dotenv()
 
 
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
@@ -24,6 +28,12 @@ def evaluate(cfg) -> None:
     dataset = WikiArtModule(cfg)
     dataset.setup()
     test_dataloader = dataset.test_dataloader()
+
+    print("Downloading model from WandB")
+    api = wandb.Api()
+    artifact_name = f"{os.getenv('WANDB_ENTITY')}-org/{cfg.eval.model_registry}/{cfg.eval.collection}:{cfg.eval.tag}"
+    artifact = api.artifact(name=artifact_name)
+    artifact.download(f"{cfg.registry.artifact_dir}")
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
     model = ArtsyClassifier.load_from_checkpoint(
