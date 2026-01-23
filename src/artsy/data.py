@@ -22,15 +22,14 @@ class WikiArtModule(L.LightningDataModule):
         self.cfg = cfg
 
         # Unpacking hyperparameters from config file
-        self.seed = cfg.data.hyperparameters.seed
-        self.batch_size = cfg.data.hyperparameters.batch_size
-        self.image_size = cfg.data.hyperparameters.image_size
-        # self.processed_data_path = cfg.data.hyperparameters.processed_data_path
+        self.seed = cfg.data.seed
+        self.batch_size = cfg.data.batch_size
+        self.image_size = cfg.data.image_size
         self.processed_data_path = os.path.join(_PATH_DATA, "processed")
-        self.max_per_class = cfg.data.hyperparameters.max_per_class
-        self.nsamples = cfg.data.hyperparameters.nsamples
-        self.labels_to_keep = cfg.data.hyperparameters.labels_to_keep
-        self.data_split = cfg.data.hyperparameters.train_val_test
+        self.max_per_class = cfg.data.max_per_class
+        self.nsamples = cfg.data.nsamples
+        self.labels_to_keep = cfg.data.labels_to_keep
+        self.data_split = cfg.data.train_val_test
 
         self.transform = v2.Compose(
             [
@@ -73,7 +72,7 @@ class WikiArtModule(L.LightningDataModule):
                     batch_id += 1
 
             if imgs:
-                # final partial batch
+                # Save final batch
                 torch.save(torch.stack(imgs), f"data/processed/images_batch_{batch_id:04d}.pt")
                 torch.save(torch.tensor(labels), f"data/processed/labels_batch_{batch_id:04d}.pt")
 
@@ -91,6 +90,7 @@ class WikiArtModule(L.LightningDataModule):
                 return True
             return False
 
+        # Filter for chosen classes
         self.ds = self.ds.filter(keep_limited)
 
         print("Transforming images")
@@ -108,6 +108,7 @@ class WikiArtModule(L.LightningDataModule):
         images = torch.cat([torch.load(f) for f in img_files], dim=0)
         labels = torch.cat([torch.load(f) for f in label_files], dim=0)
 
+        # Create dataset
         self.dataset = TensorDataset(images, labels)
 
         self.trainset, self.valset, self.testset = random_split(
