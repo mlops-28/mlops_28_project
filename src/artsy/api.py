@@ -1,17 +1,18 @@
-from fastapi import FastAPI, UploadFile, File, BackgroundTasks
-from http import HTTPStatus
-import torch
 from datetime import datetime
 import os
-import pandas as pd
-from PIL import Image
+
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
+from http import HTTPStatus
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
-from contextlib import asynccontextmanager
+import pandas as pd
+from PIL import Image
+import torch
 
 from artsy import _PROJECT_ROOT, _PATH_CONFIGS
-from artsy.model import ArtsyClassifier
 from artsy.data import WikiArtModule
+from artsy.model import ArtsyClassifier
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 os.makedirs("data/api", exist_ok=True)
@@ -63,7 +64,7 @@ def add_to_database(timestamp: str, img: torch.Tensor, prediction: int) -> None:
 
 
 @app.get("/")
-def root():
+def root() -> dict:
     """Homepage"""
     response = {
         "message": "Welcome to the Wikiart api created for MLOps 2026",
@@ -73,7 +74,8 @@ def root():
 
 
 @app.post("/predict/")
-async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = File(...)):
+async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = File(...)) -> dict:
+    """Predict style of uploaded image."""
     # Load input image
     input_image = Image.open(data.file)
 
