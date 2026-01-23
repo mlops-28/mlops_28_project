@@ -1,14 +1,13 @@
 import os
-import glob
-import torch
-import pytorch_lightning as L
 
 from datasets import load_dataset, Dataset
+import glob
+from omegaconf import DictConfig
+import pytorch_lightning as L
+import torch
 from torch.utils.data import random_split, DataLoader, TensorDataset
 from torchvision.transforms import v2
 from tqdm import tqdm
-
-from omegaconf import DictConfig
 from typing import Mapping, Optional
 
 from artsy import _PATH_DATA
