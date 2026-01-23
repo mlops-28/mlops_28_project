@@ -1,10 +1,10 @@
 docs/site/
 
 # folders
-data/processed/
 outputs/*
-models/*
 wandb/*
+data/processed
+models/
 
 # test cache
 manual_test/
