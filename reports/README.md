@@ -112,7 +112,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
-* [ ] Create an architectural diagram over your MLOps pipeline
+* [x] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
 * [x] Uploaded all your code to GitHub
 
@@ -218,7 +218,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- We have implemeneted 14 unit tests. These test dataset, to make sure that the images have the right shape and type, that data is loaded correctly, and that only images with relevant labels are included. Model test are that the model output is equal to the batch size of the input, that the model output has the correct number of mapped labels and correct number of classes. Training tests are that the config file is loaded as a DictConfig and contains the correct keys, if the train_loader and val_loader from the datamodule load, that the trainer runs when accelerator is cpu, and a smoke test to see if the training starts and completes without crashing. Finally, we test that the checkpoints are created, and that test and validation loss exist, are tensors, and not negative. ---
+--- We have implemeneted 14 unit tests. These test dataset, to make sure that the images have the right shape and type, that data is loaded correctly, and that only images with relevant labels are included. Model test are that the model output is equal to the batch size of the input, that the model output has the correct number of mapped labels and correct number of classes. Training tests are that the config file is loaded as a DictConfig and contains the correct keys, if the train_loader and val_loader from the datamodule load, that the trainer runs when accelerator is cpu, and a smoke test to see if the training starts and completes without crashing. Finally, we test that test and validation loss exist, are tensors, and not negative. ---
 
 ### Question 8
 
@@ -233,8 +233,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- Code coverage is run every time we run our unit test in the github actions workflows. The cover of the __init__.py file is 100%, api.py is 90%
-
+--- Code coverage is run every time we run our unit test in the github actions workflows. The cover of the __init__.py file is 100%, api.py is 90%, data.py is 54%, model.py is 78%, and as of right now train.py is 0% - the total coverage is 30%, but also includes code, which we have not tested. For train.py some of the tests fail, but a lot of the testing done here, is also on the inputs, and testing individual parts of functions used in train, instead of running all the train model. 
 Just because code coverage is 100%, it does not mean the code is perfect, it just means that all the code is checked. But most likely there will be edge cases we haven't tested for, or things we haven't thought of testing, which is also why programs have to be updated continuously. However, having a code coverage of 100% still means that a lot of possible bugs are caught. ---
 
 ### Question 9
@@ -282,7 +281,7 @@ Just because code coverage is 100%, it does not mean the code is perfect, it jus
 >
 > Answer:
 
---- Our continuous workflows consist of unit testing, such that when we create a pull request, tests on the data, model and training files have to pass. We also perform linting, to make sure, that our code is consistent, using Ruff, this also has to pass, when a pull request is made. The testing is done across ubuntu, macos latest, and windows latest, and on Python version 3.12 and 3.13. This is done, except when it builds the docker image in the workflow, here it only uses ubuntu, because the builds take a long time, and which would take too long, if we were to run it across all the different platforms. We use caching to make sure uv, python, etc. does not have to be installed each time, the unit tests are run, but instead reuse what it has already built. An example of a triggered workflow can be seen here: <https://github.com/mlops-28/mlops_28_project/pull/25/checks> ---
+--- Our continuous workflows consist of unit testing, such that when we create a pull request, tests on the data, model and training files have to pass. We also perform linting, to make sure, that our code is consistent, using Ruff, this also has to pass, when a pull request is made. The testing is done across ubuntu, macos latest, and windows latest, and on Python version 3.12 and 3.13. This is done, except when it builds the docker image in the workflow, here it only uses ubuntu, because the builds take a long time, and which would take too long, if we were to run it across all the different platforms. Right now these builds are run each time we trigger a workflow, but ideally, this would be changed to only run, if the files used in the docker images were updated. We tried to implement this, but kept getting errors, so further work with the project, could include getting this to work. We use caching to make sure uv, python, etc. does not have to be installed each time, the unit tests are run, but instead reuse what it has already built. An example of a triggered workflow can be seen here: <https://github.com/mlops-28/mlops_28_project/pull/25/checks> ---
 
 ## Running code and tracking experiments
 
@@ -336,7 +335,9 @@ Just because code coverage is 100%, it does not mean the code is perfect, it jus
 --- ![my_image](figures/wandb_logging.png) 
 The above image shows that we have tracked accuracy and loss for both training and validation. Training loss shows if the model is improving when as it's training, and accuracy shows how good it is at labeling the images. This can also be used to see if the model improves. However, in order to make sure, that the model isn't just performing very well on the specific images, it is training on, we also track validation to see, if it can also classify new images, and to make sure, that the model doesn't overfit. By having the overlapping graphs, we can also compare the different versions of the model, created when running the model sweep, to see which one performs the best. Another thing that could have been logged were input images the model trained on. 
 ![my_image](figures/wandb_artifacts.png)
-All the models are also saved as artifacts in Wands and Biases, which can be seen in the image above. This means that we at any time can download one to test or visualize to compare performance. ---
+All the models are also saved as artifacts in Wands and Biases, which can be seen in the image above. This means that we at any time can download one to test or visualize to compare performance. 
+![my_image](figures/wandb_system.png) 
+System metrics are also logged, which can be used to see how much memory consumption, GPU/CPU usage, etc. is used throughout training, which gives insight into how efficient the model training is, and where we might be able to optimize it. ---
 
 ### Question 15
 
@@ -366,7 +367,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- In order to handle bugs, the group pretty consistently used the `breakpoint()` function. By doing this we could manually check, what was going wrong with the code, and get a better understanding, of what was running. We also at times used ChatGPT when we got errors, we did not understand. We have not run profiling, but doing so is very benificial to find proceses that take up a lot of time or compute power. By doing this, it is possible to identify bottlenecks, that can be optimized, to make the model perform faster. ---
+--- In order to handle bugs, the group pretty consistently used the `breakpoint()` function. By doing this we could manually check, what was going wrong with the code, and get a better understanding, of what was running. We also at times used ChatGPT when we got errors, we did not understand, or to catch common syntax errors, that might otherwise be easily missed. We have not run profiling, but doing so is very benificial to find proceses that take up a lot of time or compute power. By doing this, it is possible to identify bottlenecks, that can be optimized, to make the model perform faster. ---
 
 ## Working in the cloud
 
@@ -398,7 +399,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- We did not use Compute Engine, as we decided to use Vertex AI instead. We did this, as explained in the module 21, as it would make it easier to scale, to use with the entire workflow, and that we wouldn't have to trigger it manually each time. This was an ambition at the beginning of the project, but due to time constraints and using Wands and Biases it was not completely implemented. ---
+--- We did not use Compute Engine, as we decided to use Vertex AI instead. We did this, as explained in the module 21, as it would make it easier to scale, to use with the entire workflow, and that we wouldn't have to trigger it manually each time. This was an ambition at the beginning of the project, but due to time constraints and using Wands and Biases it was not completely implemented. Despite not managing to get the full integration, we still got a good insight into how a full workflow might work, and let us see how the training jobs work.  ---
 
 ### Question 19
 
@@ -416,7 +417,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- ![my_image](figures/wandb_registry.png)  ---
+--- ![my_image](figures/wikiart_registry.png)  ---
 
 ### Question 21
 
@@ -425,7 +426,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- ![my_image](figures/wandb_build.png)  ---
+--- ![my_image](figures/wikiart_build.png)  ---
 
 ### Question 22
 
@@ -473,7 +474,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- We managed to deploy the API both locally and in cloud. We started by deploying it locally, to see if it worked, and once this was confirmed we deployed it in the cloud using cloud run. Both versions use the model that is saved in artifacts, which is downloaded from Wands and Biases, as we haven't gotten the full integration up and running. For both versions we can upload an image, label it, and save it to our data registry. ---
+--- We managed to deploy the API both locally and in cloud. We started by deploying it locally, to see if it worked, and once this was confirmed we deployed it in the cloud using cloud run. Both versions use the model that is saved in artifacts, which is downloaded from Wands and Biases, as we haven't gotten the full integration up and running. For both versions we can upload an image, label it, and save it to our data registry. To envoke the service on cloud we use the following command `gcloud run deploy wikiart-api --image europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-api:latest --region europe-west1 --execution-environment gen2 --allow-unauthenticated`  ---
 
 ### Question 25
 
@@ -488,7 +489,7 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- We did both unit and load testing. The unit test tests what response code the home page gives and if it is positive. It sends an artificial image, and checks that it gets the correct response code back, and that its prediction is within the configured classes. We performed load testing using locust where we send artificial images to the API. We have only simulated with 10 users with upwards of 500 requests, but response time was within a few miliseconds on average. ---
+--- We did both unit and load testing. The unit test tests what response code the home page gives and if it is positive. It sends an artificial image, and checks that it gets the correct response code back, and that its prediction is within the configured classes. We performed load testing using locust where we send artificial images to the API. We have only simulated with 10 users with upwards of 500 requests, but response time was within a few miliseconds on average. Ideally we would also test with real images. Furthermore we could test which types of images files are uploaded, and how it handles wrong input types. ---
 
 ### Question 26
 
@@ -555,7 +556,9 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 >
 > Answer:
 
---- question 29 fill here ---
+--- ![my_image](figures/pipeline_drawing.png) 
+Our project features a CNN, that classifies the style of an image, the architecture can be seen in the image above. The model shows the perspective of the developer (us) as well as the user, divided by the dashed line in the image. During development, as the code is changed and committed, the code is first tested by a pre-commit hook to ensure code formatting, avoiding pushing large files, removal of trailing white spaces, etc. If the tests pass, the code can be committed. The development cycle uses a feature-branching system, and merges to main are done through pull requests, that have to be approved by another developer. Merges to main trigger workflows, that perform code tests, coverage, linting and image building. Models are trained and logged with Hydra and Weights and Bias (W&B), and results of sweeps and runs are stored in a W&B project. Developers can then stage best models to a W&B registry. The Docker images built from the GH Actions uses the best staged model, data from a GCP bucket, and store it in a GCP artifact registry. These images are then fed to Vertex AI for model training, and these are also logged with Hydra + W&B, and stored in the W&B project. The best model is deployed to an API, which is also unit + load tested. The user can query the API, by uploading their own image, and the model then classifies the image. The uploaded image is stored in a separate GCP bucket. The distributions of the images in the two GCP buckets are used for data drift analysis (assuming the model is further improved by the user data) and data monitoring. The user can clone the repository to follow the pipeline themselves, configure experiments with the Hydra CLI, use their own projects, cloud, buckets and more.
+---
 
 ### Question 30
 
@@ -587,4 +590,4 @@ All the models are also saved as artifacts in Wands and Biases, which can be see
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- s214205 was in charge of data processing, running cloud integration, and creating the API along with the dockerfile for thiss. s224171 was in charge of creating the model and training scripts, and integrating it with Wands and Biases. s224185 was in charge of creating the evaluation and visualization scripts, and creating docker files for training and evaluation. All students contributed to making unit tests, and have helped the others/worked on the others code after it was originally written. We have all used ChatGPT and/or Gemini to help debug code. ---
+--- s214205 was in charge of data processing, running cloud integration, and creating the API along with the dockerfile for this. s224171 was in charge of creating the model and training scripts, hydra experiment and configuration logging, workflows, precommit hooks, integrating it with Weights and Biases and monitoring the project. s224185 was in charge of creating the evaluation and visualization scripts, and creating docker files for training and evaluation, and writing the report. All students contributed to making unit tests, and have helped the others/worked on the others code after it was originally written, and helped each other with debugging and discussing problem solving strategies. We have all used ChatGPT and/or Gemini to help debug code. ---
