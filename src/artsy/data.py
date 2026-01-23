@@ -21,6 +21,7 @@ class WikiArtModule(L.LightningDataModule):
         super().__init__()
         self.cfg = cfg
 
+        # Unpacking hyperparameters from config file
         self.seed = cfg.data.hyperparameters.seed
         self.batch_size = cfg.data.hyperparameters.batch_size
         self.image_size = cfg.data.hyperparameters.image_size
