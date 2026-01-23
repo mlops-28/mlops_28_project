@@ -1,9 +1,10 @@
-from torch.utils.data import DataLoader
+from pathlib import Path
+
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 import pytest
 import torch
-from pathlib import Path
+from torch.utils.data import DataLoader
 
 from artsy.data import WikiArtModule
 from tests import _PATH_CONFIGS
@@ -13,7 +14,7 @@ pt_files = list(processed_dir.glob("*.pt"))
 
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
-def test_my_dataset():
+def test_my_dataset() -> None:
     """Test the WikiArtModule class."""
 
     with initialize_config_dir(config_dir=_PATH_CONFIGS, job_name="test", version_base=None):
@@ -29,16 +30,14 @@ def test_my_dataset():
     # nclasses = len(labels_to_keep)
     # train_val_test = cfg.data.train_val_test
 
-    # Assert we have right total amount of data
+    # # Assert we have right total amount of data
     # assert len(data.trainset) + len(data.valset) + len(data.testset) == int(nclasses * max_per_class)
-    # Tests fail due to small bug in data processing where 4 images too many were saved, and the length is therefore off by 4
-    # will update later, if we process data again - test is skipped for now
-
-    # Assert that splits have been done properly
+    # # Assert that splits have been done properly
     # assert len(data.testset) == int(nclasses * max_per_class * train_val_test[2])
     # assert len(data.valset) == int(nclasses * max_per_class * train_val_test[1])
     # assert len(data.trainset) == int(nclasses * max_per_class * train_val_test[0])
-    # See comment above
+    # Tests fail due to small bug in data processing where 4 images too many were saved, and the length is therefore off by 4
+    # will update later, if we process data again - test is skipped for now
 
     # Assert that images have the right shape
     image, _ = data.trainset[0]
@@ -46,7 +45,6 @@ def test_my_dataset():
 
     # Assert that the images have the right dtype
     assert image.dtype == torch.float16
-    # Update to float32 later, if we do data processing again
 
     trainloader = data.train_dataloader()
     testloader = data.test_dataloader()

@@ -4,15 +4,14 @@ import os
 import hydra
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import torch
 
 from artsy import _PATH_CONFIGS, _PROJECT_ROOT
 from artsy.data import WikiArtModule
 from artsy.model import ArtsyClassifier
 
 ACCELERATOR = "mps" if torch.backends.mps.is_available() else "auto"
-
 log = logging.getLogger(__name__)
 
 
@@ -100,5 +99,5 @@ def visualize(cfg) -> None:
 
 
 if __name__ == "__main__":
-    print("Calling visualize")
+    print("Running visualize.py")
     visualize()

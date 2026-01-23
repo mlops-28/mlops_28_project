@@ -67,4 +67,5 @@ def data_statistics(nimages: int = 15) -> None:
 
 
 if __name__ == "__main__":
+    print("Running data_stats.py")
     typer.run(data_statistics)

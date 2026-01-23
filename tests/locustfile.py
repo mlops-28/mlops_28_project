@@ -1,10 +1,12 @@
 import io
+
 from locust import HttpUser, between, task
-from PIL import Image
 import numpy as np
+from PIL import Image
 
 
-def make_test_image(size=256):
+def make_test_image(size: int = 256) -> io.BytesIO:
+    """Generate a test image."""
     data = np.random.rand(size, size, 3)
     data_uint8 = (data * 255).astype(np.uint8)
     img = Image.fromarray(data_uint8, "RGB")

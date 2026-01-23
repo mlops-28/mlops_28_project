@@ -9,6 +9,7 @@ from tests import _PATH_CONFIGS
 
 @pytest.mark.parametrize("batch_size", [32, 64, 128])
 def test_model_batch_size(batch_size: int) -> None:
+    """Test that output shape stays correct regardless of batch size."""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
 
@@ -18,15 +19,8 @@ def test_model_batch_size(batch_size: int) -> None:
     assert output.shape == (batch_size, 5), f"Shape of output not equal to [{batch_size}, 5], but {output.shape}"
 
 
-# def test_model_input_shape():
-#     model = NetWorkItBaby()
-#     with pytest.raises(ValueError, "Expected input to a 4D tensor"):
-#         model(torch.randn(1, 2, 3))
-#     with pytest.raises(ValueError, "Expected each sample to have shape [1, 28, 28]"):
-#         model(torch.randn(1, 1, 28, 29))
-
-
 def test_model_label_mapping() -> None:
+    """Test that number of labels in label map equal number of classes."""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
 
@@ -37,6 +31,7 @@ def test_model_label_mapping() -> None:
 
 
 def test_model_output_shape() -> None:
+    """Test that output shape is correct for a dummy tensor."""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
 

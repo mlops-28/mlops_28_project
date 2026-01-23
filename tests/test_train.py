@@ -1,35 +1,29 @@
-import pytest
-import torch
-
 from pathlib import Path
+
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
+import pytest
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
+import torch
 
-from artsy.model import ArtsyClassifier
 from artsy.data import WikiArtModule
+from artsy.model import ArtsyClassifier
 from tests import _PATH_CONFIGS
-
 
 processed_dir = Path("data/processed")
 pt_files = list(processed_dir.glob("*.pt"))
 
 
 def load_config() -> DictConfig:
-    """Loads the config file for running the training script"""
+    """Loads the config file for running the training script."""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
     return cfg
 
 
-def load_datamodule(cfg: DictConfig):
-    datamodule = WikiArtModule(cfg)
-    return datamodule.setup()
-
-
 def test_default_config() -> None:
-    """Tests that the config file is of type DictConfig, and containts the correct parameters"""
+    """Tests that the config file is of type DictConfig, and containts the correct parameters."""
     cfg = load_config()
     assert isinstance(cfg, DictConfig), "cfg is not a DictConfig"
 
@@ -55,7 +49,7 @@ def test_default_config() -> None:
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_datamodule_runs() -> None:
-    """Tests the datamodule, when data is available"""
+    """Tests the datamodule, when data is available."""
     cfg = load_config()
     datamodule = WikiArtModule(cfg)
     datamodule.setup()
@@ -66,14 +60,14 @@ def test_datamodule_runs() -> None:
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_trainer_cpu() -> None:
-    """Tests that the trainer can be created on CPU"""
+    """Tests that the trainer can be created on CPU."""
     trainer = Trainer(accelerator="cpu", max_epochs=1)
     assert trainer.accelerator is not None
 
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_training_smoke() -> None:
-    """Smoketest, to see that training starts and completes without crashing"""
+    """Smoketest, to see that training starts and completes without crashing."""
     cfg = load_config()
     datamodule = WikiArtModule(cfg)
     datamodule.setup()
@@ -87,7 +81,7 @@ def test_training_smoke() -> None:
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_checkpoints(tmp_path: Path) -> None:
-    """Tests that that checkpoints are created when training the model"""
+    """Tests that that checkpoints are created when training the model."""
     cfg = load_config()
     datamodule = WikiArtModule(cfg)
     datamodule.setup()

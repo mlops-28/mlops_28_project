@@ -1,10 +1,9 @@
-from pytorch_lightning import LightningModule
-from torch import nn, optim
-import torch
-import torchmetrics
-
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
+from pytorch_lightning import LightningModule
+import torch
+from torch import nn, optim
+import torchmetrics
 
 from artsy import _PATH_CONFIGS
 
@@ -15,7 +14,7 @@ class ArtsyClassifier(LightningModule):
     def __init__(self, cfg: DictConfig) -> None:
         super().__init__()
         self.save_hyperparameters()
-        # Out: floor((in + 2*padding - kernel_size) / stride) + 1
+        # Out shape of convolution layer: floor((in + 2*padding - kernel_size) / stride) + 1
         self.conv1 = nn.Conv2d(
             in_channels=cfg.model.in_channels,
             out_channels=cfg.model.out_channels1,
@@ -44,6 +43,7 @@ class ArtsyClassifier(LightningModule):
         self.label_map = cfg.model.label_map
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward pass of the model."""
         x = self.relu(self.conv1(x))  # Out: floor((128 + 0 - 5) / 2) + 1 = 62
         x = torch.max_pool2d(x, self.max_pool_kernel, self.max_pool_stride)  # Out: floor(62 / 2) = 31
         x = self.relu(self.conv2(x))  # Out: floor((31 + 0 - 3) / 1) + 1 = 29
@@ -55,11 +55,12 @@ class ArtsyClassifier(LightningModule):
         return self.fc(x)
 
     def _remap_targets(self, target: torch.Tensor) -> torch.Tensor:
-        """Remaps the target to fit with CrossEntropyLoss"""
+        """Remaps the target to fit with CrossEntropyLoss."""
         mapped = torch.tensor([self.label_map[int(t)] for t in target], device=target.device)
         return mapped.long()
 
-    def training_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
+    def training_step(self, batch: torch.utils.data.DataLoader, batch_idx: int) -> float:
+        """Single training step."""
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
@@ -74,7 +75,8 @@ class ArtsyClassifier(LightningModule):
 
         return loss
 
-    def validation_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
+    def validation_step(self, batch: torch.utils.data.DataLoader, batch_idx: int) -> None:
+        """Single validation step"""
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
@@ -87,7 +89,8 @@ class ArtsyClassifier(LightningModule):
         self.log("val_loss", loss, on_epoch=True)
         self.log("val_acc", self.val_acc, on_epoch=True, prog_bar=True)
 
-    def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
+    def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int) -> None:
+        """Single test step"""
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
@@ -100,11 +103,13 @@ class ArtsyClassifier(LightningModule):
         self.log("test_loss", loss, on_epoch=True)
         self.log("test_acc", self.test_acc, on_epoch=True)
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> optim.Adam:
+        """Initialize Adam optimizer"""
         return optim.Adam(self.parameters(), lr=self.lr)
 
 
 if __name__ == "__main__":
+    print("Running model.py")
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
     model = ArtsyClassifier(cfg)
