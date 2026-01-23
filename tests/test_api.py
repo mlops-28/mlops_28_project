@@ -43,7 +43,7 @@ def test_post_prediction():
         assert response.json()["status-code"] == 200
 
         prediction = response.json()["prediction"]
-        style_path = "/data/processed/styles.txt"
+        style_path = "data/processed/styles.txt"
         styles = pd.read_csv(style_path, sep=",")
         label = int(styles.index[styles["style"] == prediction][0])
 
