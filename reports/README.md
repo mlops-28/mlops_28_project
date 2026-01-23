@@ -54,51 +54,51 @@ will check the repositories and the code to verify your answers.
 
 * [x] Create a git repository (M5)
 * [x] Make sure that all team members have write access to the GitHub repository (M5)
-* [ ] Create a dedicated environment for you project to keep track of your packages (M2)
+* [x] Create a dedicated environment for you project to keep track of your packages (M2)
 * [x] Create the initial file structure using cookiecutter with an appropriate template (M6)
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
-* [ ] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
+* [x] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6)
+* [x] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [x] Remember to either fill out the `requirements.txt`/`requirements_dev.txt` files or keeping your
     `pyproject.toml`/`uv.lock` up-to-date with whatever dependencies that you are using (M2+M6)
-* [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
-* [ ] Do a bit of code typing and remember to document essential parts of your code (M7)
-* [ ] Setup version control for your data or part of your data (M8)
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
-* [ ] Construct one or multiple docker files for your code (M10)
-* [ ] Build the docker files locally and make sure they work as intended (M10)
-* [ ] Write one or multiple configurations files for your experiments (M11)
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [x] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
+* [x] Do a bit of code typing and remember to document essential parts of your code (M7)
+* [x] Setup version control for your data or part of your data (M8)
+* [x] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [x] Construct one or multiple docker files for your code (M10)
+* [x] Build the docker files locally and make sure they work as intended (M10)
+* [x] Write one or multiple configurations files for your experiments (M11)
+* [x] Used Hydra to load the configurations and manage your hyperparameters (M11)
 * [ ] Use profiling to optimize your code (M12)
-* [ ] Use logging to log important events in your code (M14)
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (M14)
-* [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
+* [x] Use logging to log important events in your code (M14)
+* [x] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+* [x] Consider running a hyperparameter optimization sweep (M14)
+* [x] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16)
-* [ ] Write unit tests related to model construction and or model training (M16)
-* [ ] Calculate the code coverage (M16)
-* [ ] Get some continuous integration running on the GitHub repository (M17)
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
-* [ ] Add a linting step to your continuous integration (M17)
-* [ ] Add pre-commit hooks to your version control setup (M18)
+* [x] Write unit tests related to the data part of your code (M16)
+* [x] Write unit tests related to model construction and or model training (M16)
+* [x] Calculate the code coverage (M16)
+* [x] Get some continuous integration running on the GitHub repository (M17)
+* [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [x] Add a linting step to your continuous integration (M17)
+* [x] Add pre-commit hooks to your version control setup (M18)
 * [ ] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 * [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
 * [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Create a FastAPI application that can do inference using your model (M22)
+* [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
-* [ ] Write API tests for your application and setup continues integration for these (M24)
-* [ ] Load test your application (M24)
+* [x] Write API tests for your application and setup continues integration for these (M24)
+* [x] Load test your application (M24)
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
-* [ ] Setup collection of input-output data from your deployed application (M27)
+* [x] Check how robust your model is towards data drifting (M27)
+* [x] Setup collection of input-output data from your deployed application (M27)
 * [ ] Deploy to the cloud a drift detection API (M27)
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
@@ -113,8 +113,8 @@ will check the repositories and the code to verify your answers.
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
+* [x] Make sure all group members have an understanding about all parts of the project
+* [x] Uploaded all your code to GitHub
 
 ## Group information
 
@@ -123,7 +123,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+--- Group 28 ---
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -134,7 +134,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+--- s214205, s224171, s224185 ---
 
 ### Question 3
 > **Did you end up using any open-source frameworks/packages not covered in the course during your project? If so**
@@ -148,7 +148,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 3 fill here ---
+--- We did not use any open-source frameworks/packages not covered in the course ---
 
 ## Coding environment
 
@@ -168,7 +168,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+--- We used a `pyproject.toml` file to manage our dependencies, and `uv.lock` to ensure reproducibility. When a new dependency is added using uv add, the `.toml` file is updated automatically, and `uv.lock` is regenerated. If a new team member wanted to get an exact copy of the environment they would have to make sure to install uv, and then inside the project root folder, they should run `uv sync --dev --locked`, to install the packages specified in the `uv.lock` file. If they wanted to use pip, the dependencies could be exported from the `uv.lock` file to a `requirements.txt` file, and be installed from there using `pip install -r requirements.txt`. ---
 
 ### Question 5
 
@@ -199,7 +199,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 6 fill here ---
+--- We used ruff for linting and formatting the code. We added that line-length is 120 characters at most to our project configuration. This is important to keep code consisten across files, especially in large projects. For typing, we added type annotation to function parameters and return values. For documentation, we have written docstrings at the beginning of functions, that describes what the function does. Typing is important because it makes sure a programmer can see what a function needs, and what they will get out of it. Docstrings are important because they describe how a function works, which makes it easier for a programmer to understand what they do. All of this makes collaboration easier, and improves readability. ---
 
 ## Version control
 
@@ -218,7 +218,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 7 fill here ---
+--- We have implemeneted 14 unit tests. These test dataset, to make sure that the images have the right shape and type, that the data is loaded correctly, and that only images with relevant labels are included in the dataset. For the model, we test that the model output is equal to the batch size of the input, that the model outputs the correct number of mapped labels, and that the output also has the correct number of classes. For the training, we test that the cofig file is loaded as a DictConfig, and that it contains the correct keys for running the training script. Then we test if the train_loader and val_loader form the datamodule load, that the trainer runs when accelerator is cpu, and run a smoke test to see if the training starts and completes without crashing. Finally, we test that the checkpoints are created when running the model, and that test and validation loss exist, are tensors, and are not negative. ---
 
 ### Question 8
 
@@ -248,7 +248,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 9 fill here ---
+--- We used both branches and pull requests when working on the project. We decided to create a branch for each task, e.g. making the test script, unit tests, or dockerfiles. Once a task was finished, we merged main into the branch, if it had been updated since the branch was created. We then pushed the branch and made a pull request, that must pass our unit tests, and be approved by another group member. By doing this, we avoided group members working in the same files at the same time, and possibly getting merge conlficts. It also makes it easier to go back to older versions of the project, as code was not pushed into main, until it was finished. ---
 
 ### Question 10
 
@@ -299,7 +299,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 12 fill here ---
+--- In order to configure our experiments we created config files, and used hydra to load them. By doing this, we could, for example, call uv run src/artsy/train.py model.lr=1e-3 trainer.max_epochs=50. By doing this we get a log of the parameters used for a given experiment. ---
 
 ### Question 13
 
@@ -314,7 +314,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 13 fill here ---
+--- One of the things we did to reporduce experiments was making config files for the different tasks related to the model. We made a default config file, and then we made config files for each of the scripts, such that we had standard values running for each experiment, unless manually changed when calling the code. SKRIV MERE HER ---
 
 ### Question 14
 
@@ -346,7 +346,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 15 fill here ---
+--- We made two docker images, one for training and one for evaluating script. To run the traning docker image, you use `docker run train:latest`. ADD LINK, SKRIV MERE---
 
 ### Question 16
 
@@ -361,7 +361,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 16 fill here ---
+--- In order to handle bugs, the group pretty consistently used the `breakpoint()` function. By doing this we could manually check, what was going wrong with the code, and get a better understanding, of what was running. PROFILING??? ---
 
 ## Working in the cloud
 
@@ -452,7 +452,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 23 fill here ---
+--- We wrote an API for our model using FastAPI. BELLA ---
 
 ### Question 24
 
@@ -517,7 +517,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 27 fill here ---
+--- Bella used XXX credits, Nikolai used XXX credits, and Sofie used 42 credits. The most expensive servise was ???. Working in the cloud was difficult, there are a lot of things, that need to work together, for it to work correctly, especially when trying to also work with docker and Wands and Biases. Given more time, to work specifically with the cloud, we are sure, that it is a very beneficial tool. ---
 
 ### Question 28
 
@@ -564,7 +564,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 30 fill here ---
+--- The biggest challenge in the project was working with the cloud. Integrating DVC and running the code with the data stored in the cloud was difficult, and has taken a long time to implement. Furthermore getting it to work across different machines was also quite a challenge. ---
 
 ### Question 31
 
@@ -582,4 +582,4 @@ will check the repositories and the code to verify your answers.
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+--- s214205 was in charge of data processing, running cloud integration, and creating the API along with the dockerfile for thiss. s224171 was in charge of creating the model and training scripts, and integrating it with Wands and Biases. s224185 was in charge of creating the evaluation and visualization scripts, and creating docker files for training and evaluation. All students contributed to making unit tests, and have helped the others/worked on the others code after it was originally written. We have all used ChatGPT and/or Gemini to help debug code. ---
