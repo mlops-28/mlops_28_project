@@ -7,8 +7,8 @@ from omegaconf import DictConfig
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from src.artsy.model import ArtsyClassifier
-from src.artsy.data import WikiArtModule
+from artsy.model import ArtsyClassifier
+from artsy.data import WikiArtModule
 from tests import _PATH_CONFIGS
 
 
@@ -18,7 +18,7 @@ pt_files = list(processed_dir.glob("*.pt"))
 def load_config() -> DictConfig:
     """Loads the config file for running the training script"""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
-        cfg: DictConfig = compose(config_name="default_config")
+        cfg: DictConfig = compose(config_name="default_config.yaml")
     return cfg
 
 def load_datamodule(cfg: DictConfig):
