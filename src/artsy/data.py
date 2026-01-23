@@ -90,6 +90,7 @@ class WikiArtModule(L.LightningDataModule):
                 return True
             return False
 
+        # Filter for chosen classes
         self.ds = self.ds.filter(keep_limited)
 
         print("Transforming images")
