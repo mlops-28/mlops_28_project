@@ -83,11 +83,11 @@ will check the repositories and the code to verify your answers.
 * [x] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
 * [x] Add a linting step to your continuous integration (M17)
 * [x] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
+* [x] Add a continues workflow that triggers when data changes (M19)
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [x] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [x] Get your model training in GCP using either the Engine or Vertex AI (M21)
 * [x] Create a FastAPI application that can do inference using your model (M22)
 * [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 * [x] Write API tests for your application and setup continues integration for these (M24)
@@ -103,8 +103,8 @@ will check the repositories and the code to verify your answers.
 * [ ] Instrument your API with a couple of system metrics (M28)
 * [ ] Setup cloud monitoring of your instrumented application (M28)
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
-* [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
+* [x] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [x] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
 
 ### Extra
@@ -233,7 +233,9 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 8 fill here ---
+--- Code coverage is run every time we run our unit test in the github actions workflows. The cover of the __init__.py file is 100%, api.py is 90%
+
+Just because code coverage is 100%, it does not mean the code is perfect, it just means that all the code is checked. But most likely there will be edge cases we haven't tested for, or things we haven't thought of testing, which is also why programs have to be updated continuously. However, having a code coverage of 100% still means that a lot of possible bugs are caught. ---
 
 ### Question 9
 
@@ -263,7 +265,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 10 fill here ---
+--- We set up DVC to run in the cloud, but have not fully integrated it due to time constraints. It would be helpful, if we changed or added data as time goes on. Our idea was to add more data, and more classes for the model to classify. Had we done this using DVC, we would have been able to track the data, so if the model crashed after adding data, or the performance decreased a lot, we would know exactly what data had caused it, and would be able to remove it, or update the model to work with the new data. ---
 
 ### Question 11
 
@@ -280,7 +282,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 11 fill here ---
+--- Our continuous workflows consist of unit testing, such that when we create a pull request, tests on the data, model and training files have to pass. We also perform linting, to make sure, that our code is consistent, using Ruff, this also has to pass, when a pull request is made. The testing is done across ubuntu, macos latest, and windows latest, and on Python version 3.12 and 3.13. This is done, except when it builds the docker image in the workflow, here it only uses ubuntu, because the builds take a long time, and which would take too long, if we were to run it across all the different platforms. We use caching to make sure uv, python, etc. does not have to be installed each time, the unit tests are run, but instead reuse what it has already built. An example of a triggered workflow can be seen here: <https://github.com/mlops-28/mlops_28_project/pull/25/checks> ---
 
 ## Running code and tracking experiments
 
@@ -332,7 +334,9 @@ will check the repositories and the code to verify your answers.
 > Answer:
 
 --- ![my_image](figures/wandb_logging.png) 
-The above image shows that we have tracked accuracy and loss for both training and validation. Training loss shows if the model is improving when as it's training, and accuracy shows how good it is at labeling the images. This can also be used to see if the model improves. However, in order to make sure, that the model isn't just performing very well on the specific images, it is training on, we also track validation to see, if it can also classify new images, and to make sure, that the model doesn't overfit. By having the overlapping graphs, we can also compare the different versions of the model, created when running the model sweep, to see which one performs the best. ---
+The above image shows that we have tracked accuracy and loss for both training and validation. Training loss shows if the model is improving when as it's training, and accuracy shows how good it is at labeling the images. This can also be used to see if the model improves. However, in order to make sure, that the model isn't just performing very well on the specific images, it is training on, we also track validation to see, if it can also classify new images, and to make sure, that the model doesn't overfit. By having the overlapping graphs, we can also compare the different versions of the model, created when running the model sweep, to see which one performs the best. Another thing that could have been logged were input images the model trained on. 
+![my_image](figures/wandb_artifacts.png)
+All the models are also saved as artifacts in Wands and Biases, which can be seen in the image above. This means that we at any time can download one to test or visualize to compare performance. ---
 
 ### Question 15
 
@@ -362,7 +366,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- In order to handle bugs, the group pretty consistently used the `breakpoint()` function. By doing this we could manually check, what was going wrong with the code, and get a better understanding, of what was running. PROFILING??? ---
+--- In order to handle bugs, the group pretty consistently used the `breakpoint()` function. By doing this we could manually check, what was going wrong with the code, and get a better understanding, of what was running. We also at times used ChatGPT when we got errors, we did not understand. We have not run profiling, but doing so is very benificial to find proceses that take up a lot of time or compute power. By doing this, it is possible to identify bottlenecks, that can be optimized, to make the model perform faster. ---
 
 ## Working in the cloud
 
@@ -394,7 +398,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- question 18 fill here ---
+--- We did not use Compute Engine, as we decided to use Vertex AI instead. We did this, as explained in the module 21, as it would make it easier to scale, to use with the entire workflow, and that we wouldn't have to trigger it manually each time. This was an ambition at the beginning of the project, but due to time constraints and using Wands and Biases it was not completely implemented. ---
 
 ### Question 19
 
@@ -436,7 +440,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- question 22 fill here ---
+--- We used Vertex AI to train the model. We created a configuration file for Vertex AI and had the Docker images in the artifact registry. Using this we could call Vertex AI using a command in the commandline. By doing this, we avoided training the model locally on a computer. This would have been very benificial if we were to make a long training run, for example with a lot of epochs, or making a big parameter sweep, as there would be more compute power, and our own computers wouldn't be stuck training for hours, days, or weeks.  ---
 
 ## Deployment
 
@@ -453,7 +457,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- We wrote an API for our model using FastAPI. BELLA ---
+--- We wrote an API for our model using FastAPI. It ís relatively simple. It has a root, and it has an option to upload an image, that will then be classified by the model. The image is stored and processed like the rest of the data our model has been given. Given more time, we would have liked to make a warning, that the image the user uploads is saved. Furthermore we would have liked to give examples of images of different styles, and also inform the user, what classes are often mislabeled as eachother, maybe showing the answer distribution for their image, so they can see if there is a likelihood that the image was misclassified, and what other class it might belong to. ---
 
 ### Question 24
 
@@ -469,7 +473,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- question 24 fill here ---
+--- We managed to deploy the API both locally and in cloud. We started by deploying it locally, to see if it worked, and once this was confirmed we deployed it in the cloud using cloud run. Both versions use the model that is saved in artifacts, which is downloaded from Wands and Biases, as we haven't gotten the full integration up and running. For both versions we can upload an image, label it, and save it to our data registry. ---
 
 ### Question 25
 
@@ -484,7 +488,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- question 25 fill here ---
+--- We did both unit and load testing. The unit test tests what response code the home page gives and if it is positive. It sends an artificial image, and checks that it gets the correct response code back, and that its prediction is within the configured classes. We performed load testing using locust where we send artificial images to the API. We have only simulated with 10 users with upwards of 500 requests, but response time was within a few miliseconds on average. ---
 
 ### Question 26
 
@@ -499,7 +503,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- question 26 fill here ---
+--- We have made a little monitoring of the deployed model, by testing datadrifting, by comparing to the artificial images we get from locust. This creates a report that showed that the distribution had changed - the html file from this has unfortunately not been uploaded, as it was too large. However this process has not been made automatic. Monitoring would be benificial to check how the model performs, and alert if the performance decreases too much. This could be used to it seeing new types of data, it hasn't seen before. By doing this, we could be allerted, and retrain the model, once performance has degraded too much. One way to do this is with the cloud run service. ---
 
 ## Overall discussion of project
 
@@ -565,7 +569,7 @@ The above image shows that we have tracked accuracy and loss for both training a
 >
 > Answer:
 
---- One of the biggest challenge in the project was working with the cloud. Integrating DVC and running the code with the data stored in the cloud was difficult, and has taken a long time to implement. Furthermore getting it to work across different machines was also quite a challenge. Time has also been a challenge, as there is a lot of different parts that we first have to learn, and then having to get them to work together. In order to deal with this, we divided the tasks, where each person started with tasks they understood the best, so we got as much as we could done without getting stuck. By doing this, we also got a better understanding of other tasks, making progressing with those easier. Continuous workflows were also hard to work with, no real strategy was made, besides continuing to work with them, until they worked. ---
+--- The first challenge was data processing, as our dataset was very large, so we had to figure out how handle this. As a way to get around this, we also decided to use float16 when storing the images, which later lead to an issue, as Windows computers don't handle float16. One of the biggest challenge in the project was working with the cloud. Integrating DVC and running the code with the data stored in the cloud was difficult, and has taken a long time to implement. Furthermore getting it to work across different machines was also quite a challenge. Time has also been a challenge, as there is a lot of different parts that we first have to learn, and then having to get them to work together. In order to deal with this, we divided the tasks, where each person started with tasks they understood the best, so we got as much as we could done without getting stuck. By doing this, we also got a better understanding of other tasks, making progressing with those easier. Continuous workflows were also hard to work with, no real strategy was made, besides continuing to work with them, until they worked. Another challenge was figuring out which tasks to prioritize, which has lead to us starting a lot of tasks, that run separately, but not leaving enough time to integrate the separate components. ---
 
 ### Question 31
 
