@@ -2,6 +2,7 @@ docs/site/
 
 # folders
 outputs/*
+wandb/*
 data/processed
 models/
 

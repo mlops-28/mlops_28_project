@@ -1,0 +1,5 @@
+artifact_dir: artifacts/
+higher_is_better: false
+metric_name: score
+model_name: model-pvsxq7bo
+staged_model_tags: ["best", "staging"]

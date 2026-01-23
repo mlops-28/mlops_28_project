@@ -1,9 +1,9 @@
-import hydra
 import logging
+import os
+
+import hydra
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import pandas as pd
 import torch
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
@@ -26,46 +26,10 @@ def visualize(cfg) -> None:
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
     model = ArtsyClassifier.load_from_checkpoint(
-        checkpoint_path=model_checkpoint,
-        strict=True,
-        map_location=torch.device("cpu"),
+        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=torch.device("cpu"), weights_only=False
     )
 
     model.eval()
-
-    print("Plotting losses")
-
-    df = pd.read_csv(cfg.visualize.logs.loss_logs)
-
-    train_loss = df["train_loss"].dropna()
-    train_loss_smooth = train_loss.rolling(window=50, min_periods=1).mean()
-    val_loss = df["val_loss"].dropna()
-    val_loss_smooth = val_loss.rolling(window=50, min_periods=1).mean()
-
-    fig, ax = plt.subplots(1, 2, figsize=(10, 8))
-    ax[0].plot(train_loss.values)
-    ax[0].set_xlabel("Step")
-    ax[0].set_title("Training loss")
-    ax[1].plot(val_loss.values)
-    ax[1].set_xlabel("Epoch")
-    ax[1].set_title("Validation loss")
-    fig.supylabel("Loss")
-    plt.tight_layout()
-    plt.savefig("./reports/figures/losses.png")
-    plt.close()
-
-    fig, ax = plt.subplots(1, 2, figsize=(10, 8))
-    ax[0].plot(train_loss_smooth.values)
-    ax[0].set_xlabel("Step")
-    ax[0].set_title("Training loss")
-    ax[1].plot(val_loss_smooth.values)
-    ax[1].set_xlabel("Epoch")
-    ax[1].set_title("Validation loss")
-    fig.supxlabel("Step")
-    fig.supylabel("Loss")
-    plt.tight_layout()
-    plt.savefig("./reports/figures/losses_smooth.png")
-    plt.close()
 
     ### Plotting confusion matrix
     print("Running the trained model in inference mode")
