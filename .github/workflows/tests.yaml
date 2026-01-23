@@ -9,38 +9,6 @@ on:
       - main
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      build1: ${{ steps.filter.outputs.build1 }}
-      build2: ${{ steps.filter.outputs.build2 }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Path Filter
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            build1:
-              - 'src/artsy/data.py'
-              - 'src/artsy/train.py'
-              - 'src/artsy/model.py'
-              - 'configs/data/**'
-              - 'configs/model/**'
-              - 'configs/trainer/**'
-              - 'dockerfiles/train.dockerfile'
-              - 'cloudbuild.yaml'
-            build2:
-              - 'src/artsy/evaluate.py'
-              - 'src/artsy/visualize.py'
-              - 'dockerfiles/evaluate.dockerfile'
-              - 'configs/eval/**'
-              - 'configs/visualize/**'
-
   test:
     runs-on: ${{ matrix.operating-system }}
     strategy:
@@ -69,12 +37,7 @@ jobs:
           uv run coverage report -m
 
   build1:
-    needs: [test, changes]
-    if: >
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      needs.test.result == 'success' &&
-      needs.changes.outputs.build1 == 'true'
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -92,16 +55,7 @@ jobs:
       run: gcloud builds submit . --config cloudbuild.yaml --substitutions=_IMAGE_NAME=wikiart_train:latest
 
   build2:
-    needs: [test, changes, build1]
-    if: >
-      always() &&
-      github.event_name == 'push' &&
-      github.ref == 'refs/heads/main' &&
-      needs.test.result == 'success' &&
-      (
-        needs.build1.result == 'success' ||
-        needs.changes.outputs.build2 == 'true'
-      )
+    needs: [test, build1]
 
     runs-on: ubuntu-latest
     steps:
