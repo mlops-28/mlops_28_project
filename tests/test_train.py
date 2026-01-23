@@ -37,10 +37,9 @@ def test_default_config() -> None:
     for k in ["in_channels", "num_classes", "lr", "label_map"]:
         assert k in cfg.model, f"{k} not in model_conf"
     assert "data" in cfg, "data not in default_config"
-    assert "hyperparameters" in cfg.data, "hyperparameters not in data_conf"
     for param in ["seed", "batch_size", "image_size", "processed_data_path", "max_per_class",
                   "nsamples", "labels_to_keep", "train_val_test"]:
-        assert param in cfg.data.hyperparameters, f"{param} not in hyperparameters"
+        assert param in cfg.data, f"{param} not in data"
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_datamodule_runs() -> None:
