@@ -65,11 +65,13 @@ class ArtsyClassifier(LightningModule):
         data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
+
         loss = self.criterium(preds.float(), target)
-        self.train_acc(preds, target)
+        pred_labels = torch.argmax(preds, dim=1)
+        self.train_acc(pred_labels, target)
 
         self.log("train_loss", loss, on_step=True, on_epoch=False, prog_bar=True)
-        self.log("train_acc", self.train_acc)
+        self.log("train_acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
 
         return loss
 
@@ -78,26 +80,26 @@ class ArtsyClassifier(LightningModule):
         data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
+
         loss = self.criterium(preds.float(), target)
-        self.val_acc(preds, target)
+        pred_labels = torch.argmax(preds, dim=1)
+        self.val_acc(pred_labels, target)
 
-        self.log("val_loss", loss)
-        self.log("val_acc", self.val_acc)
-
-        return loss
+        self.log("val_loss", loss, on_epoch=True)
+        self.log("val_acc", self.val_acc, on_epoch=True, prog_bar=True)
 
     def test_step(self, batch: torch.utils.data.DataLoader, batch_idx: int):
         data, target = batch
         data = data.float()
         target = self._remap_targets(target)
         preds = self(data)
+
         loss = self.criterium(preds.float(), target)
-        self.test_acc(preds, target)
+        pred_labels = torch.argmax(preds, dim=1)
+        self.test_acc(pred_labels, target)
 
-        self.log("test_loss", loss)
-        self.log("test_acc", self.test_acc)
-
-        return loss
+        self.log("test_loss", loss, on_epoch=True)
+        self.log("test_acc", self.test_acc, on_epoch=True)
 
     def configure_optimizers(self):
         return optim.Adam(self.parameters(), lr=self.lr)

@@ -2,14 +2,17 @@ from torch.utils.data import DataLoader
 from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 import pytest
-import os
 import torch
+from pathlib import Path
 
 from artsy.data import WikiArtModule
 from tests import _PATH_CONFIGS
 
+processed_dir = Path("data/processed")
+pt_files = list(processed_dir.glob("*.pt"))
 
-@pytest.mark.skipif(not os.path.exists("data/processed/"), reason="Data files not found")
+
+@pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_my_dataset():
     """Test the WikiArtModule class."""
 
@@ -19,12 +22,12 @@ def test_my_dataset():
     data = WikiArtModule(cfg)
     data.setup()
 
-    image_size = cfg.data.hyperparameters.image_size
-    # max_per_class = cfg.data.hyperparameters.max_per_class
-    # nsamples = cfg.data.hyperparameters.nsamples
-    labels_to_keep = cfg.data.hyperparameters.labels_to_keep
+    image_size = cfg.data.image_size
+    # max_per_class = cfg.data.max_per_class
+    # nsamples = cfg.data.nsamples
+    labels_to_keep = cfg.data.labels_to_keep
     # nclasses = len(labels_to_keep)
-    # train_val_test = cfg.data.hyperparameters.train_val_test
+    # train_val_test = cfg.data.train_val_test
 
     # Assert we have right total amount of data
     # assert len(data.trainset) + len(data.valset) + len(data.testset) == int(nclasses * max_per_class)

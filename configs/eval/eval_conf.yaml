@@ -1,2 +1,3 @@
 # model_checkpoint: "models/best_model.pth"
-model_checkpoint: "./outputs/2026-01-21/14-07-42/models/epoch=7-step=6456.ckpt"
+# model_checkpoint: "./models/epoch=8-step=14517.ckpt"
+model_checkpoint: "./outputs/2026-01-21/14-51-58/models/epoch=7-step=6456.ckpt"
