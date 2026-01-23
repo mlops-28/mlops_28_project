@@ -31,6 +31,7 @@ class WikiArtModule(L.LightningDataModule):
         self.labels_to_keep = cfg.data.labels_to_keep
         self.data_split = cfg.data.train_val_test
 
+        # Define transformation
         self.transform = v2.Compose(
             [
                 v2.Resize(self.image_size),  # resize shortest side to 256
