@@ -74,7 +74,7 @@ jobs:
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
       (
-      needs.build1.result == 'success' ||  # build1 ran successfully
+      needs.build1.result == 'success' ||
       contains(join(github.event.commits.*.modified, ' '), 'src/artsy/evaluate.py') ||
       contains(join(github.event.commits.*.modified, ' '), 'src/artsy/visualize.py') ||
       contains(join(github.event.commits.*.modified, ' '), 'dockerfiles/evaluate.dockerfile') ||
