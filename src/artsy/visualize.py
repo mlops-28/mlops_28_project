@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
 def visualize(cfg) -> None:
     """Function to plot losses, confusion matrix, and prediciton vs. target images"""
-    print("Loading dataset, model, and checkpoints")
+    log.info("Loading dataset, model, and checkpoints")
     dataset = WikiArtModule(cfg)
     dataset.setup(stage="test")
     test_dataloader = dataset.test_dataloader()
@@ -31,7 +31,7 @@ def visualize(cfg) -> None:
     model.eval()
 
     ### Plotting confusion matrix
-    print("Running the trained model in inference mode")
+    log.info("Running the trained model in inference mode")
     preds_list: list[torch.Tensor] = []
     targets_list: list[torch.Tensor] = []
     images_list: list[torch.Tensor] = []
@@ -60,7 +60,7 @@ def visualize(cfg) -> None:
     pred_names = [label_names_df[label] for label in preds_orig.tolist()]
     target_names = [label_names_df[label] for label in targets.tolist()]
 
-    print("Creating confusion matrix")
+    log.info("Creating confusion matrix")
     cm = confusion_matrix(target_names, pred_names, labels=label_names)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=label_names)
     plt.figure(figsize=(8, 8))
@@ -70,7 +70,7 @@ def visualize(cfg) -> None:
     plt.close()
 
     # Plotting preidcted vs. true labels
-    print("Plotting true vs. predicted labels")
+    log.info("Plotting true vs. predicted labels")
     num_examples = 10
     indices = np.random.choice(len(images), num_examples)
 
@@ -95,7 +95,7 @@ def visualize(cfg) -> None:
     plt.savefig(f"./reports/figures/{cfg.visualize.figures.example_predictions}")
     plt.close()
 
-    print("Done plotting!")
+    log.info("Done plotting.")
 
 
 if __name__ == "__main__":

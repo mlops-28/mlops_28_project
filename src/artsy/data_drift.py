@@ -59,6 +59,7 @@ def extract_features_batch(dataloader):
 
 
 if __name__ == "__main__":
+    print("Running data_drift.py")
     ## Load new data
     parser = argparse.ArgumentParser()
     parser.add_argument("-path_to_csv", default="prediction_database.csv", type=str)
