@@ -72,7 +72,7 @@ class WikiArtModule(L.LightningDataModule):
                     batch_id += 1
 
             if imgs:
-                # final partial batch
+                # Save final batch
                 torch.save(torch.stack(imgs), f"data/processed/images_batch_{batch_id:04d}.pt")
                 torch.save(torch.tensor(labels), f"data/processed/labels_batch_{batch_id:04d}.pt")
 
