@@ -15,15 +15,18 @@ from tests import _PATH_CONFIGS
 processed_dir = Path("data/processed")
 pt_files = list(processed_dir.glob("*.pt"))
 
+
 def load_config() -> DictConfig:
     """Loads the config file for running the training script"""
     with initialize_config_dir(config_dir=_PATH_CONFIGS, version_base=None):
         cfg: DictConfig = compose(config_name="default_config.yaml")
     return cfg
 
+
 def load_datamodule(cfg: DictConfig):
     datamodule = WikiArtModule(cfg)
     return datamodule.setup()
+
 
 def test_default_config() -> None:
     """Tests that the config file is of type DictConfig, and containts the correct parameters"""
@@ -37,31 +40,42 @@ def test_default_config() -> None:
     for k in ["in_channels", "num_classes", "lr", "label_map"]:
         assert k in cfg.model, f"{k} not in model_conf"
     assert "data" in cfg, "data not in default_config"
-    for param in ["seed", "batch_size", "image_size", "processed_data_path", "max_per_class",
-                  "nsamples", "labels_to_keep", "train_val_test"]:
+    for param in [
+        "seed",
+        "batch_size",
+        "image_size",
+        "processed_data_path",
+        "max_per_class",
+        "nsamples",
+        "labels_to_keep",
+        "train_val_test",
+    ]:
         assert param in cfg.data, f"{param} not in data"
+
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_datamodule_runs() -> None:
     """Tests the datamodule, when data is available"""
     cfg = load_config()
-    datamodule = WikiArtModule(cfg) 
+    datamodule = WikiArtModule(cfg)
     datamodule.setup()
     train_loader, val_loader = datamodule.train_dataloader(), datamodule.val_dataloader()
     assert train_loader is not None, "train_loader is None"
     assert val_loader is not None, "val_loader is None"
 
+
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_trainer_cpu() -> None:
-    """Tests that the trainer can be created on CPU""" 
-    trainer = Trainer(accelerator="cpu", max_epochs=1) 
+    """Tests that the trainer can be created on CPU"""
+    trainer = Trainer(accelerator="cpu", max_epochs=1)
     assert trainer.accelerator is not None
+
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_training_smoke() -> None:
     """Smoketest, to see that training starts and completes without crashing"""
     cfg = load_config()
-    datamodule = WikiArtModule(cfg) 
+    datamodule = WikiArtModule(cfg)
     datamodule.setup()
 
     model = ArtsyClassifier(cfg)
@@ -70,11 +84,12 @@ def test_training_smoke() -> None:
 
     trainer.fit(model, datamodule)
 
+
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_checkpoints(tmp_path: Path) -> None:
     """Tests that that checkpoints are created when training the model"""
     cfg = load_config()
-    datamodule = WikiArtModule(cfg) 
+    datamodule = WikiArtModule(cfg)
     datamodule.setup()
 
     model = ArtsyClassifier(cfg)
@@ -88,8 +103,8 @@ def test_checkpoints(tmp_path: Path) -> None:
     )
 
     trainer = Trainer(
-        accelerator="cpu",        
-        fast_dev_run=True,         
+        accelerator="cpu",
+        fast_dev_run=True,
         callbacks=[checkpoint_cb],
         enable_checkpointing=True,
     )
@@ -101,11 +116,12 @@ def test_checkpoints(tmp_path: Path) -> None:
 
     assert checkpoint_cb.best_model_path != "", "Path is not created"
 
+
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
 def test_loss_logging() -> None:
     """Tests that loss is logged and not negative"""
     cfg = load_config()
-    datamodule = WikiArtModule(cfg) 
+    datamodule = WikiArtModule(cfg)
     datamodule.setup()
 
     model = ArtsyClassifier(cfg)
@@ -125,4 +141,3 @@ def test_loss_logging() -> None:
 
     assert train_loss.item() >= 0.0, "Train loss is negative"
     assert val_loss.item() >= 0.0, "Validation loss is negative"
-

@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI):
     model_checkpoint = gcs_model_path if os.path.exists(gcs_model_path) else local_model_path
 
     model = ArtsyClassifier.load_from_checkpoint(
-        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE
+        checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE, weights_only=False
     )
     model.to(DEVICE)
     model.eval()

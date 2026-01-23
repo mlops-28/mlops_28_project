@@ -1,8 +1,11 @@
-import hydra
 import logging
 import os
+
+from dotenv import load_dotenv
+import hydra
 from pytorch_lightning import Trainer, seed_everything
 import torch
+import wandb
 
 from artsy import _PATH_CONFIGS, _PROJECT_ROOT
 from artsy.data import WikiArtModule
@@ -14,6 +17,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 seed_everything(seed=42, workers=True)
 
 log = logging.getLogger(__name__)
+load_dotenv()
 
 
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
@@ -25,13 +29,20 @@ def evaluate(cfg) -> None:
     dataset.setup()
     test_dataloader = dataset.test_dataloader()
 
-    gcs_model_path = f"/gcs/wikiart-models/{cfg.eval.model_checkpoint}"
-    local_model_path = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
+    print("Downloading model from WandB")
+    api = wandb.Api()
+    artifact_name = f"{os.getenv('WANDB_ENTITY')}-org/{cfg.eval.model_registry}/{cfg.eval.collection}:{cfg.eval.tag}"
+    artifact = api.artifact(name=artifact_name)
+    artifact.download(f"{cfg.registry.artifact_dir}")
 
-    if os.path.exists(gcs_model_path):
-        model_checkpoint = gcs_model_path
-    else:
-        model_checkpoint = local_model_path
+    model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
+    # gcs_model_path = f"/gcs/wikiart-models/{cfg.eval.model_checkpoint}"
+    # local_model_path = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
+
+    # if os.path.exists(gcs_model_path):
+    #     model_checkpoint = gcs_model_path
+    # else:
+    #     model_checkpoint = local_model_path
 
     model = ArtsyClassifier.load_from_checkpoint(
         checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE, weights_only=False
