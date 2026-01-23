@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Path Filter
         uses: dorny/paths-filter@v3
@@ -68,10 +70,11 @@ jobs:
 
   build1:
     needs: [test, changes]
-    if: |
+    if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
-      (needs.changes.outputs.build1 == 'true' || contains(github.event.head_commit.message, '[build]'))
+      needs.test.result == 'success' &&
+      needs.changes.outputs.build1 == 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -90,15 +93,16 @@ jobs:
 
   build2:
     needs: [test, changes, build1]
-    if: |
+    if: >
       always() &&
-      needs.test.result == 'success' &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main' &&
+      needs.test.result == 'success' &&
       (
         needs.build1.result == 'success' ||
         needs.changes.outputs.build2 == 'true'
       )
+
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
