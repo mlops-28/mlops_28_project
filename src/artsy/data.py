@@ -28,6 +28,7 @@ class WikiArtModule(L.LightningDataModule):
         self.nsamples = cfg.data.nsamples
         self.labels_to_keep = cfg.data.labels_to_keep
         self.data_split = cfg.data.train_val_test
+        self.processed_data_path = "data/processed"
 
         # Define transformation
         self.transform = v2.Compose(

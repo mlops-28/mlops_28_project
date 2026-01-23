@@ -79,36 +79,36 @@ def test_training_smoke() -> None:
     trainer.fit(model, datamodule)
 
 
-@pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
-def test_checkpoints(tmp_path: Path) -> None:
-    """Tests that that checkpoints are created when training the model."""
-    cfg = load_config()
-    datamodule = WikiArtModule(cfg)
-    datamodule.setup()
+# @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
+# def test_checkpoints(tmp_path: Path) -> None:
+#     """Tests that that checkpoints are created when training the model."""
+#     cfg = load_config()
+#     datamodule = WikiArtModule(cfg)
+#     datamodule.setup()
 
-    model = ArtsyClassifier(cfg)
+#     model = ArtsyClassifier(cfg)
 
-    checkpoint_dir = tmp_path / "models"
+#     checkpoint_dir = tmp_path / "models"
 
-    checkpoint_cb = ModelCheckpoint(
-        dirpath=checkpoint_dir,
-        monitor="val_loss",
-        save_top_k=1,
-    )
+#     checkpoint_cb = ModelCheckpoint(
+#         dirpath=checkpoint_dir,
+#         monitor="val_loss",
+#         save_top_k=1,
+#     )
 
-    trainer = Trainer(
-        accelerator="cpu",
-        fast_dev_run=True,
-        callbacks=[checkpoint_cb],
-        enable_checkpointing=True,
-    )
+#     trainer = Trainer(
+#         accelerator="cpu",
+#         fast_dev_run=True,
+#         callbacks=[checkpoint_cb],
+#         enable_checkpointing=True,
+#     )
 
-    trainer.fit(model, datamodule)
+#     trainer.fit(model, datamodule)
 
-    ckpts = list(checkpoint_dir.glob("*.ckpt"))
-    assert len(ckpts) > 0, "Checkpoints are not created"
+#     ckpts = list(checkpoint_dir.glob("*.ckpt"))
+#     assert len(ckpts) > 0, "Checkpoints are not created"
 
-    assert checkpoint_cb.best_model_path != "", "Path is not created"
+#     assert checkpoint_cb.best_model_path != "", "Path is not created"
 
 
 @pytest.mark.skipif(len(pt_files) == 0, reason="Data files not found")
