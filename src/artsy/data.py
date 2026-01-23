@@ -21,15 +21,15 @@ class WikiArtModule(L.LightningDataModule):
         super().__init__()
         self.cfg = cfg
 
-        self.seed = cfg.data.hyperparameters.seed
-        self.batch_size = cfg.data.hyperparameters.batch_size
-        self.image_size = cfg.data.hyperparameters.image_size
-        # self.processed_data_path = cfg.data.hyperparameters.processed_data_path
+        self.seed = cfg.data.seed
+        self.batch_size = cfg.data.batch_size
+        self.image_size = cfg.data.image_size
+        # self.processed_data_path = cfg.data.processed_data_path
         self.processed_data_path = os.path.join(_PATH_DATA, "processed")
-        self.max_per_class = cfg.data.hyperparameters.max_per_class
-        self.nsamples = cfg.data.hyperparameters.nsamples
-        self.labels_to_keep = cfg.data.hyperparameters.labels_to_keep
-        self.data_split = cfg.data.hyperparameters.train_val_test
+        self.max_per_class = cfg.data.max_per_class
+        self.nsamples = cfg.data.nsamples
+        self.labels_to_keep = cfg.data.labels_to_keep
+        self.data_split = cfg.data.train_val_test
 
         self.transform = v2.Compose(
             [

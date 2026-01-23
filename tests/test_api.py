@@ -44,8 +44,8 @@ def test_post_prediction():
         assert response.json()["status-code"] == 200
 
         prediction = response.json()["prediction"]
-        style_path = os.path.join(cfg.data.hyperparameters.processed_data_path, "styles.txt")
+        style_path = os.path.join(cfg.data.processed_data_path, "styles.txt")
         styles = pd.read_csv(style_path, sep=",")
         label = int(styles.index[styles["style"] == prediction][0])
 
-        assert label in cfg.data.hyperparameters.labels_to_keep
+        assert label in cfg.data.labels_to_keep

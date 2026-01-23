@@ -1,0 +1,25 @@
+program: src/artsy/train.py
+name: cnn_sweep
+project: mlops_28
+entity: nbenemark-danmarks-tekniske-universitet-dtu
+method: bayes
+
+metric:
+    name: val_loss
+    goal: minimize
+parameters:
+    data.batch_size:
+        values: [32, 64]
+    model.drop_p:
+        values: [0.2, 0.3, 0.4, 0.5]
+    model.lr:
+        values: [1e-2, 1e-3, 1e-4]
+    trainer.max_epochs:
+        value: 20
+run_cap: 10
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - ${args_no_hyphens}
