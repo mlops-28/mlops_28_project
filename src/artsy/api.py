@@ -93,7 +93,7 @@ async def get_prediction(background_tasks: BackgroundTasks, data: UploadFile = F
     background_tasks.add_task(add_to_database, timestamp, img, prediction)
 
     # Get real label
-    style_path = "processed/data/styles.txt"
+    style_path = "data/processed/styles.txt"
     styles = pd.read_csv(style_path, sep=",")
     label = str(styles.at[prediction, "style"])
 
