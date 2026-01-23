@@ -1,8 +1,8 @@
 docs/site/
 
 # folders
-data/processed/
 outputs/*
+data/processed
 
 # test cache
 manual_test/
