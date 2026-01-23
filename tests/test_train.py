@@ -60,64 +60,71 @@ def test_datamodule_skips() -> None:
     breakpoint()
     datamodule = WikiArtModule(cfg)
 
-    assert datamodule.train_dataloader() is not None, "Dataset module not have"
-    # model = ArtsyClassifier(cfg)
-    # model.eval()
+    assert datamodule.train_dataloader() is not None, "Datamodule not have train_dataloader()"
+    assert datamodule.val_dataloader() is not None, "Datamodule not have val_dataloader()"
 
-    # batch_size = 2
-    # x = torch.randn(batch_size, cfg.model.in_channels, 128, 128)
+def test_training_smoke() -> None:
+    """Smoketest, to see that training starts and completes without crashing"""
+    cfg = load_config()
+    breakpoint()
+    datamodule = WikiArtModule(cfg)
+    datamodule.setup()
 
-    # with torch.no_grad():
-    #     y = model(x)
+    model = ArtsyClassifier(cfg)
 
-    # assert y.shape == (batch_size, cfg.model.num_classes), f"y does not have shape ({batch_size},{cfg.model.num_classes})"
+    trainer = Trainer(fast_dev_run=True, accelerator="cpu")
 
-    # assert torch.isfinite(y).all()
-    # assert y.dtype == torch.float32
+    trainer.fit(model, datamodule)
 
-    # x = torch.randn(2, cfg.model.in_channels, 128, 128)
 
-    # with torch.no_grad():
-    #     y1 = model(x)
-    #     y2 = model(x)
+def test_checkpoints(tmp_path: Path) -> None:
+    """Tests that that checkpoints are created when training the model"""
+    cfg = load_config()
+    breakpoint()
+    datamodule = WikiArtModule(cfg)
+    datamodule.setup()
 
-    # assert torch.equal(y1, y2)
+    model = ArtsyClassifier(cfg)
 
-    # trainer = Trainer(
-    #     fast_dev_run=True,   
-    #     accelerator="cpu",   
-    # )
+    checkpoint_dir = tmp_path / "models"
 
-    # trainer.fit(model, datamodule)
+    checkpoint_cb = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        monitor="val_loss",
+        save_top_k=1,
+    )
 
-    # checkpoint_dir = tmp_path / "models"
+    trainer = Trainer(
+        accelerator="cpu",        
+        fast_dev_run=True,         
+        callbacks=[checkpoint_cb],
+        enable_checkpointing=True,
+    )
 
-    # checkpoint_cb = ModelCheckpoint(
-    #     dirpath=checkpoint_dir,
-    #     monitor="val_loss",
-    #     save_top_k=1,
-    # )
+    trainer.fit(model, datamodule)
 
-    # trainer = Trainer(
-    #     accelerator="cpu",        
-    #     fast_dev_run=True,         
-    #     callbacks=[checkpoint_cb],
-    #     enable_checkpointing=True,
-    # )
+    ckpts = list(checkpoint_dir.glob("*.ckpt"))
+    assert len(ckpts) > 0, "Checkpoints are not created"
 
-    # trainer.fit(model, datamodule)
+    assert checkpoint_cb.best_model_path != "", "Path is not created"
 
-    # ckpts = list(checkpoint_dir.glob("*.ckpt"))
-    # assert len(ckpts) > 0
+def test_loss_logging() -> None:
+    """Tests that loss is logged and not negative"""
+    cfg = load_config()
+    breakpoint()
+    datamodule = WikiArtModule(cfg)
+    datamodule.setup()
 
-    # assert checkpoint_cb.best_model_path != ""
+    model = ArtsyClassifier(cfg)
 
-    # trainer = Trainer(accelerator="cpu", fast_dev_run=True, logger=False, enable_checkpointing=False)
+    trainer = Trainer(accelerator="cpu", fast_dev_run=True, logger=False, enable_checkpointing=False)
+
+    trainer.fit(model, datamodule)
+
+    assert "train_loss" in trainer.callback_metrics, "Train loss"
+    assert "val_loss" in trainer.callback_metrics
+
     # assert trainer.accelerator is not None
-    # trainer.fit(model, datamodule)
-
-    # assert "val_loss" in trainer.callback_metrics
-
     # accel = "mps" if torch.backends.mps.is_available() else "auto"
     # assert accel in {"mps", "auto"}
 
