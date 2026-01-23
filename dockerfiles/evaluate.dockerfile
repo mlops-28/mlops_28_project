@@ -12,8 +12,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 COPY src src/
 COPY configs configs/
-COPY data data/
-COPY outputs/2026-01-21/19-26-46/models/ outputs/2026-01-21/19-26-46/models/
 COPY README.md LICENSE ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
