@@ -7,7 +7,7 @@ steps:
     '-t',
     'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/$_IMAGE_NAME',
     '-f',
-    './dockerfiles/api.dockerfile'
+    './dockerfiles/$_DOCKER_NAME.dockerfile'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'
@@ -21,3 +21,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
 substitutions:
   _IMAGE_NAME: 'my_image'
+  _DOCKER_NAME: 'train'
