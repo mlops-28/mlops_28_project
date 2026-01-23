@@ -15,6 +15,7 @@ ACCELERATOR = "mps" if torch.backends.mps.is_available() else "auto"
 
 log = logging.getLogger(__name__)
 
+
 @hydra.main(config_path=_PATH_CONFIGS, config_name="default_config.yaml", version_base=None)
 def visualize(cfg) -> None:
     """Function to plot losses, confusion matrix, and prediciton vs. target images"""
@@ -25,23 +26,23 @@ def visualize(cfg) -> None:
 
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
     model = ArtsyClassifier.load_from_checkpoint(
-                                                checkpoint_path=model_checkpoint, 
-                                                strict=True, 
-                                                map_location=torch.device("cpu"),
-                                                )
-    
+        checkpoint_path=model_checkpoint,
+        strict=True,
+        map_location=torch.device("cpu"),
+    )
+
     model.eval()
 
     print("Plotting losses")
 
     df = pd.read_csv(cfg.visualize.logs.loss_logs)
-    
+
     train_loss = df["train_loss"].dropna()
     train_loss_smooth = train_loss.rolling(window=50, min_periods=1).mean()
     val_loss = df["val_loss"].dropna()
     val_loss_smooth = val_loss.rolling(window=50, min_periods=1).mean()
 
-    fig, ax = plt.subplots(1,2,figsize=(10,8))
+    fig, ax = plt.subplots(1, 2, figsize=(10, 8))
     ax[0].plot(train_loss.values)
     ax[0].set_xlabel("Step")
     ax[0].set_title("Training loss")
@@ -53,7 +54,7 @@ def visualize(cfg) -> None:
     plt.savefig("./reports/figures/losses.png")
     plt.close()
 
-    fig, ax = plt.subplots(1,2,figsize=(10,8))
+    fig, ax = plt.subplots(1, 2, figsize=(10, 8))
     ax[0].plot(train_loss_smooth.values)
     ax[0].set_xlabel("Step")
     ax[0].set_title("Training loss")
@@ -81,7 +82,7 @@ def visualize(cfg) -> None:
             preds_list.append(preds)
             images_list.append(images)
             targets_list.append(targets)
-            
+
     preds = torch.cat(preds_list).cpu().numpy()
     images = torch.cat(images_list).cpu().numpy()
     targets = torch.cat(targets_list).cpu().numpy()
@@ -90,7 +91,7 @@ def visualize(cfg) -> None:
     preds_orig = [inv_label_map[p.item()] for p in preds]
     preds_orig = torch.Tensor(preds_orig)
 
-    label_names_df = cfg.visualize.labels.names 
+    label_names_df = cfg.visualize.labels.names
     label_names = list(label_names_df.values())
 
     pred_names = [label_names_df[label] for label in preds_orig.tolist()]
@@ -99,7 +100,7 @@ def visualize(cfg) -> None:
     print("Creating confusion matrix")
     cm = confusion_matrix(target_names, pred_names, labels=label_names)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=label_names)
-    plt.figure(figsize=(8,8))
+    plt.figure(figsize=(8, 8))
     disp.plot(xticks_rotation=45, cmap="Blues", colorbar=False)
     plt.tight_layout()
     plt.savefig(f"./reports/figures/{cfg.visualize.figures.confusion_matrix}")
@@ -119,19 +120,20 @@ def visualize(cfg) -> None:
         if img.shape[0] == 1:
             ax.imshow(img.squeeze(0), cmap="gray")
         else:
-            ax.imshow(img.transpose(1,2,0))
-        
+            ax.imshow(img.transpose(1, 2, 0))
+
         true_label = label_names_df[int(targets[idx])]
         pred_label = label_names_df[int(preds_orig[idx])]
 
         ax.set_title(f"True: {true_label}\nPredicted: {pred_label}")
         ax.axis("off")
-    
+
     plt.tight_layout()
     plt.savefig(f"./reports/figures/{cfg.visualize.figures.example_predictions}")
     plt.close()
 
     print("Done plotting!")
+
 
 if __name__ == "__main__":
     print("Calling visualize")

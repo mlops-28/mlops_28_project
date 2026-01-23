@@ -2,17 +2,15 @@
 * [ ] Test that whole group can access data in cloud (M21)
 
 - S
-* [ ] Construct evaluate docker file (M10)
-* [ ] Build the docker file locally and make sure it work as intended (M10)
+* [ ] Unit test of train
 
 - N
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
-* [ ] Consider running a hyperparameter optimization sweep (Wandb) (M14)
+* [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
 
 - B
-* [ ] Construct train docker file (M10)
-* [ ] Construct api docker file
-* [ ] Build the docker files locally and make sure they work as intended (M10)
+* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
+* [ ] Create a trigger workflow for automatically building your docker images (M21)
+* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
 
 ## General
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7) (Ruff)
@@ -27,13 +25,9 @@
 
 ### Week 2
 - Core
-* [ ] Unit test of train
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
-* [ ] Deploy your model in GCP using either Functions or Run as the backend (M23)
 
 - Optional
-* [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
+
 * [ ] Create a more specialized ML-deployment API using either ONNX or BentoML, or both (M25)
 * [ ] Create a frontend for your API (M26)
 
@@ -55,5 +49,3 @@
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
 * [ ] Create an architectural diagram over your MLOps pipeline
-* [ ] Make sure all group members have an understanding about all parts of the project
-* [ ] Uploaded all your code to GitHub
