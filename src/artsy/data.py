@@ -108,6 +108,7 @@ class WikiArtModule(L.LightningDataModule):
         images = torch.cat([torch.load(f) for f in img_files], dim=0)
         labels = torch.cat([torch.load(f) for f in label_files], dim=0)
 
+        # Create dataset
         self.dataset = TensorDataset(images, labels)
 
         self.trainset, self.valset, self.testset = random_split(
