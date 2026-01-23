@@ -11,8 +11,6 @@ from tqdm import tqdm
 from omegaconf import DictConfig
 from typing import Mapping, Optional
 
-from artsy import _PATH_DATA
-
 
 class WikiArtModule(L.LightningDataModule):
     "Loads Wikiart dataset from Huggingface, so it is ready to be used for training and testing with the Pytorch Lightning module"
@@ -25,7 +23,6 @@ class WikiArtModule(L.LightningDataModule):
         self.seed = cfg.data.seed
         self.batch_size = cfg.data.batch_size
         self.image_size = cfg.data.image_size
-        self.processed_data_path = os.path.join(_PATH_DATA, "processed")
         self.max_per_class = cfg.data.max_per_class
         self.nsamples = cfg.data.nsamples
         self.labels_to_keep = cfg.data.labels_to_keep
@@ -61,12 +58,18 @@ class WikiArtModule(L.LightningDataModule):
                 labels.append(ex["style"])
 
                 if len(imgs) == nsamples:
-                    torch.save(
-                        torch.stack(imgs), os.path.join(self.processed_data_path, f"images_batch_{batch_id:04d}.pt")
-                    )
-                    torch.save(
-                        torch.stack(labels), os.path.join(self.processed_data_path, f"labels_batch_{batch_id:04d}.pt")
-                    )
+                    try:
+                        torch.save(
+                            torch.stack(imgs),
+                            f"/gcs/wikiart-data-processed/data/processed/images_batch_{batch_id:04d}.pt",
+                        )
+                        torch.save(
+                            torch.stack(labels),
+                            f"/gcs/wikiart-data-processed/data/processed/labels_batch_{batch_id:04d}.pt",
+                        )
+                    except (RuntimeError, FileNotFoundError, PermissionError):
+                        torch.save(torch.stack(imgs), f"data/processed/images_batch_{batch_id:04d}.pt")
+                        torch.save(torch.stack(labels), f"data/processed/labels_batch_{batch_id:04d}.pt")
 
                     imgs.clear()
                     labels.clear()
@@ -103,8 +106,13 @@ class WikiArtModule(L.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None) -> None:
         """Data is loaded from the given directory and split into train, val and test"""
-        img_files = sorted(glob.glob(f"{self.processed_data_path}/images_batch_*.pt"))
-        label_files = sorted(glob.glob(f"{self.processed_data_path}/labels_batch_*.pt"))
+
+        try:
+            img_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/images_batch_*.pt"))
+            label_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/labels_batch_*.pt"))
+        except (RuntimeError, FileNotFoundError, PermissionError):
+            img_files = sorted(glob.glob("data/processed/images_batch_*.pt"))
+            label_files = sorted(glob.glob("data/processed/labels_batch_*.pt"))
 
         images = torch.cat([torch.load(f) for f in img_files], dim=0)
         labels = torch.cat([torch.load(f) for f in label_files], dim=0)

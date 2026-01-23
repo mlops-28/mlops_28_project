@@ -25,7 +25,14 @@ def evaluate(cfg) -> None:
     dataset.setup()
     test_dataloader = dataset.test_dataloader()
 
-    model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
+    gcs_model_path = f"/gcs/wikiart-models/{cfg.eval.model_checkpoint}"
+    local_model_path = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
+
+    if os.path.exists(gcs_model_path):
+        model_checkpoint = gcs_model_path
+    else:
+        model_checkpoint = local_model_path
+
     model = ArtsyClassifier.load_from_checkpoint(
         checkpoint_path=model_checkpoint, cfg=cfg, strict=True, map_location=DEVICE, weights_only=False
     )
