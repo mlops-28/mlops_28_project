@@ -523,7 +523,7 @@ System metrics are also logged, which can be used to see how much memory consump
 >
 > Answer:
 
---- Bella used $1.7 in credits, Nikolai used $0.03 in credits, and Sofie used 42 kr. in credits. The most expensive servises were Cloud Storage and Compute Engine. Working in the cloud was difficult, there are a lot of things, that need to work together, for it to work correctly, especially when trying to also work with docker and Weights and Biases. Due to the time constraints of the project, it was hard to get a full understanding of Google Cloud, which also made it very hard to integrate with the project. Given more time, to work specifically with the cloud, we are sure, that it is a very beneficial tool for storing and running models faster and across multiple devices. ---
+--- s214205 used $1.7 in credits, s224171 used $0.03 in credits, and s224185 used 42 kr. in credits. The most expensive servises were Cloud Storage and Compute Engine. Working in the cloud was difficult, there are a lot of things, that need to work together, for it to work correctly, especially when trying to also work with docker and Weights and Biases. Due to the time constraints of the project, it was hard to get a full understanding of Google Cloud, which also made it very hard to integrate with the project. Given more time, to work specifically with the cloud, we are sure, that it is a very beneficial tool for storing and running models faster and across multiple devices. ---
 
 ### Question 28
 

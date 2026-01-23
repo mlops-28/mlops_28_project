@@ -4,7 +4,7 @@ from hydra import compose, initialize_config_dir
 from omegaconf import DictConfig
 import pytest
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint
+# from pytorch_lightning.callbacks import ModelCheckpoint
 import torch
 
 from artsy.data import WikiArtModule
