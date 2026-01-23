@@ -10,6 +10,8 @@ from torchvision.transforms import v2
 from tqdm import tqdm
 from typing import Mapping, Optional
 
+from artsy import _PATH_DATA
+
 
 class WikiArtModule(L.LightningDataModule):
     "Loads Wikiart dataset from Huggingface, so it is ready to be used for training and testing with the Pytorch Lightning module"
@@ -106,12 +108,12 @@ class WikiArtModule(L.LightningDataModule):
     def setup(self, stage: Optional[str] = None) -> None:
         """Data is loaded from the given directory and split into train, val and test"""
 
-        try:
-            img_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/images_batch_*.pt"))
-            label_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/labels_batch_*.pt"))
-        except (RuntimeError, FileNotFoundError, PermissionError):
-            img_files = sorted(glob.glob("data/processed/images_batch_*.pt"))
-            label_files = sorted(glob.glob("data/processed/labels_batch_*.pt"))
+        img_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/images_batch_*.pt"))
+        label_files = sorted(glob.glob("/gcs/wikiart-data-processed/data/processed/labels_batch_*.pt"))
+        if not img_files:
+            print("Cloud data not found, falling back to local project data path...")
+            img_files = sorted(glob.glob(os.path.join(_PATH_DATA, "processed", "images_batch_*.pt")))
+            label_files = sorted(glob.glob(os.path.join(_PATH_DATA, "processed", "labels_batch_*.pt")))
 
         images = torch.cat([torch.load(f) for f in img_files], dim=0)
         labels = torch.cat([torch.load(f) for f in label_files], dim=0)

@@ -5,16 +5,16 @@ steps:
     'build',
     '.',
     '-t',
-    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-api:latest',
+    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-evaluate:latest',
     '-f',
-    './dockerfiles/api.dockerfile'
+    './dockerfiles/evaluate.dockerfile'
   ]
 
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Push container image'
   args: [
     'push',
-    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-api:latest'
+    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-evalaute:latest'
   ]
 
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -22,9 +22,9 @@ steps:
   args: [
     'run',
     'deploy',
-    'wikiart-api',
+    'wikiart-evaluate',
     '--image',
-    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-api:latest',
+    'europe-west1-docker.pkg.dev/eighth-saga-484310-f8/wikiart-registry/wikiart-evaluate:latest',
     '--region',
     'europe-west1',
     '--platform',

@@ -34,14 +34,6 @@ def evaluate(cfg) -> None:
     artifact = api.artifact(name=artifact_name)
     artifact.download(f"{cfg.registry.artifact_dir}")
 
-    # gcs_model_path = f"/gcs/wikiart-models/{cfg.eval.model_checkpoint}"
-    # local_model_path = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
-
-    # if os.path.exists(gcs_model_path):
-    #     model_checkpoint = gcs_model_path
-    # else:
-    #     model_checkpoint = local_model_path
-
     # Load model from downloaded checkpoint
     model_checkpoint = os.path.join(_PROJECT_ROOT, cfg.eval.model_checkpoint)
     model = ArtsyClassifier.load_from_checkpoint(
