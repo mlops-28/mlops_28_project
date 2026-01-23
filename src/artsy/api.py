@@ -69,7 +69,8 @@ def add_to_database(timestamp: str, img: torch.Tensor, prediction: int) -> None:
         with open(os.path.join(file_path, "prediction_database.csv"), "a") as file:
             file.write(f"{timestamp},{file_path},{prediction}\n")
     else:
-        torch.save(img, os.path.join("data/api", filename))
+        file_path = "data/api"
+        torch.save(img, os.path.join(file_path, filename))
         with open("data/prediction_database.csv", "a") as file:
             file.write(f"{timestamp},{file_path},{prediction}\n")
 
