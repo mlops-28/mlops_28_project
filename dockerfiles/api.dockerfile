@@ -1,12 +1,18 @@
-FROM ghcr.io/astral-sh/uv:python3.12-alpine AS base
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-COPY uv.lock uv.lock
+EXPOSE 8080
+
+WORKDIR /
+
 COPY pyproject.toml pyproject.toml
-
-RUN uv sync --frozen --no-install-project
-
+COPY uv.lock uv.lock
+COPY README.md README.md
 COPY src src/
+COPY data/api data/api/
+COPY configs configs/
+COPY outputs/2026-01-21/14-51-58/models outputs/2026-01-21/14-51-58/models/
+COPY data/processed/styles.txt data/processed/styles.txt
 
-RUN uv sync --frozen
+RUN uv sync --frozen --no-dev && rm -rf /root/.cache/pypoetry /root/.cache/pip
 
-ENTRYPOINT ["uv", "run", "uvicorn", "src.artsy.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uv run uvicorn src.artsy.api:app --host 0.0.0.0 --port ${PORT}
